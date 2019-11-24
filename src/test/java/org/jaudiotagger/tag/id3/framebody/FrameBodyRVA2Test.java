@@ -9,7 +9,7 @@ import org.jaudiotagger.tag.id3.ID3v24Frames;
  */
 public class FrameBodyRVA2Test extends AbstractTestCase
 {
-    public static byte[] TEST_BYTES;
+    public static final byte[] TEST_BYTES;
 
     static
     {

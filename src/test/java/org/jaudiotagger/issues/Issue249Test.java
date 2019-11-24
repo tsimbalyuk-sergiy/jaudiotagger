@@ -4,7 +4,12 @@ import org.jaudiotagger.AbstractTestCase;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.mp3.MP3File;
-import org.jaudiotagger.tag.id3.*;
+import org.jaudiotagger.tag.id3.ID3v22Frame;
+import org.jaudiotagger.tag.id3.ID3v22Frames;
+import org.jaudiotagger.tag.id3.ID3v22Tag;
+import org.jaudiotagger.tag.id3.ID3v24Frame;
+import org.jaudiotagger.tag.id3.ID3v24Frames;
+import org.jaudiotagger.tag.id3.ID3v24Tag;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyIPLS;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyTIPL;
 

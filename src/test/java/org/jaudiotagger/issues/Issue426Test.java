@@ -5,12 +5,14 @@ import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
+import org.junit.Ignore;
 
 import java.io.File;
 
 /**
  * Test problem with mapping UFID frame
  */
+@Ignore
 public class Issue426Test extends AbstractTestCase
 {
     public void testHasField() throws Exception

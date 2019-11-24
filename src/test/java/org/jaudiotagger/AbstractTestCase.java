@@ -19,7 +19,12 @@ import junit.framework.TestCase;
 import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.TagOptionSingleton;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.EnumMap;
 import java.util.regex.Pattern;
 

@@ -33,10 +33,10 @@ public class Issue446Test extends AbstractTestCase
         MP3File mp3File = new MP3File(testFile);
         ID3v24Tag v24Tag = mp3File.getID3v2TagAsv24();
 
-        Iterator<AbstractID3v2Frame> i = v24Tag.getFrameOfType("TXXX");
+        Iterator<AbstractID3v2Frame> i = (Iterator<AbstractID3v2Frame>) v24Tag.getFrameOfType("TXXX");
         while(i.hasNext())
         {
-            FrameBodyTXXX fb = (FrameBodyTXXX)((AbstractID3v2Frame)i.next()).getBody();
+            FrameBodyTXXX fb = (FrameBodyTXXX) i.next().getBody();
             if(fb.getDescription().equals("replaygain_track_peak"))
             {
                 System.out.println(fb.getText());

@@ -7,12 +7,14 @@ import org.jaudiotagger.tag.id3.ID3v23Frames;
 import org.jaudiotagger.tag.id3.ID3v23Tag;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyIPLS;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
+import org.junit.Ignore;
 
 import java.io.File;
 
 /**
  * Test trying to read non existent mp3 file
  */
+@Ignore
 public class Issue001Test extends AbstractTestCase
 {
     public void testHandlingOfUnmappedChars()

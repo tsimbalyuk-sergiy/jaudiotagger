@@ -1,8 +1,5 @@
 package org.jaudiotagger;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -10,13 +7,15 @@ import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.NoWritePermissionsException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.TagOptionSingleton;
 
-import static junit.framework.TestCase.*;
+import java.io.File;
+import java.io.IOException;
+
+import static junit.framework.TestCase.assertTrue;
 
 public class FilePermissionsTest {
 
@@ -77,8 +76,8 @@ public class FilePermissionsTest {
 	}
 
 	private static void setFieldAndCommit(File testFile, boolean performPreCheck) throws CannotReadException,
-			IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException, FieldDataInvalidException,
-			CannotWriteException {
+			IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException,
+      CannotWriteException {
 		TagOptionSingleton.getInstance().setCheckIsWritable(performPreCheck);
 		try {
 			AudioFile aFile = AudioFileIO.read(testFile);

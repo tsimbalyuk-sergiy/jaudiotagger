@@ -8,7 +8,7 @@ import org.jaudiotagger.tag.id3.ID3v22Frames;
  */
 public class FrameBodyPICTest extends AbstractTestCase
 {
-    public static String DESCRIPTION = "ImageTestv22";
+    public static final String DESCRIPTION = "ImageTestv22";
 
     public static FrameBodyPIC getInitialisedBody()
     {

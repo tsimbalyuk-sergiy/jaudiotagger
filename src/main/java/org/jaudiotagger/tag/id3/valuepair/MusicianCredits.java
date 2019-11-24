@@ -1,6 +1,7 @@
 package org.jaudiotagger.tag.id3.valuepair;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * List of musician credit keys that can be used when converting from IPLS to TIPL/TMCL to

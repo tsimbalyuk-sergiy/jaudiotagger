@@ -8,6 +8,7 @@ import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Test WXXX Frame
@@ -43,7 +44,7 @@ public class FrameWXXXTest extends AbstractTestCase
     {
         ID3v24Frame frame = new ID3v24Frame(ID3v24Frames.FRAME_ID_USER_DEFINED_URL);
         FrameBodyWXXX fb = new FrameBodyWXXX();
-        fb.setUrlLink(UNICODE_LINK_START + URLEncoder.encode(UNICODE_LINK_END, "utf8"));
+        fb.setUrlLink(UNICODE_LINK_START + URLEncoder.encode(UNICODE_LINK_END, StandardCharsets.UTF_8));
         frame.setBody(fb);
         return frame;
     }
@@ -183,7 +184,7 @@ public class FrameWXXXTest extends AbstractTestCase
         final StringBuffer sb = new StringBuffer(splitURL[0]);
         for (int i = 1; i < splitURL.length; i++)
         {
-            sb.append("/").append(URLEncoder.encode(splitURL[i], "utf-8"));
+            sb.append("/").append(URLEncoder.encode(splitURL[i], StandardCharsets.UTF_8));
         }
         assertEquals(UNICODE_ENCODED, sb.toString());
     }

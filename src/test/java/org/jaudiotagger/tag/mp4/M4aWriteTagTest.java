@@ -11,7 +11,12 @@ import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.TagOptionSingleton;
 import org.jaudiotagger.tag.mp4.atom.Mp4ContentTypeValue;
 import org.jaudiotagger.tag.mp4.atom.Mp4RatingValue;
-import org.jaudiotagger.tag.mp4.field.*;
+import org.jaudiotagger.tag.mp4.field.Mp4DiscNoField;
+import org.jaudiotagger.tag.mp4.field.Mp4FieldType;
+import org.jaudiotagger.tag.mp4.field.Mp4TagCoverField;
+import org.jaudiotagger.tag.mp4.field.Mp4TagReverseDnsField;
+import org.jaudiotagger.tag.mp4.field.Mp4TagTextNumberField;
+import org.jaudiotagger.tag.mp4.field.Mp4TrackField;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,9 +28,9 @@ import java.util.List;
  */
 public class M4aWriteTagTest extends TestCase
 {
-    private static int TEST_FILE1_SIZE = 3883555;
-    private static int TEST_FILE2_SIZE = 3882440;
-    private static int TEST_FILE5_SIZE = 119472;
+    private static final int TEST_FILE1_SIZE = 3883555;
+    private static final int TEST_FILE2_SIZE = 3882440;
+    private static final int TEST_FILE5_SIZE = 119472;
 
     @Override
     public void setUp()

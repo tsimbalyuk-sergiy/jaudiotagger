@@ -1,9 +1,8 @@
 package org.jaudiotagger.audio.dff;
 
-import java.io.IOException;
-
 import org.jaudiotagger.audio.generic.Utils;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 

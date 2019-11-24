@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class NetworkTest extends AbstractTestCase
 {
-    private static AtomicInteger count = new AtomicInteger(0);
+    private static final AtomicInteger count = new AtomicInteger(0);
     private void loadFiles(final File dir) throws Exception
     {
         File[] files = dir.listFiles(new AudioFileFilter());

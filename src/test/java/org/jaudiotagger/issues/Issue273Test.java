@@ -7,11 +7,13 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.id3.AbstractID3v2Frame;
 import org.jaudiotagger.tag.id3.ID3v23Tag;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyCOMM;
+import org.junit.Ignore;
 
 import java.io.File;
 
 /** COMM Frames with non-standard lang values
  */
+@Ignore
 public class Issue273Test extends AbstractTestCase
 {
     /**

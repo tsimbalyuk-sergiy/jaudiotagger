@@ -5,18 +5,16 @@
 package org.jaudiotagger.audio.dff;
 
 import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidChunkException;
 import org.jaudiotagger.audio.generic.AudioFileReader2;
 import org.jaudiotagger.audio.generic.GenericAudioHeader;
 import org.jaudiotagger.audio.generic.Utils;
+import org.jaudiotagger.tag.Tag;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.util.logging.Level;
-
-import org.jaudiotagger.audio.exceptions.InvalidChunkException;
-
-import org.jaudiotagger.tag.Tag;
 
 public class DffFileReader extends AudioFileReader2
 {

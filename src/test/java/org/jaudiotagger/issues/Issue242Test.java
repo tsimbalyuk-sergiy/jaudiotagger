@@ -8,12 +8,14 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.id3.ID3v22Tag;
 import org.jaudiotagger.tag.id3.ID3v23Tag;
 import org.jaudiotagger.tag.id3.ID3v24Tag;
+import org.junit.Ignore;
 
 import java.io.File;
 
 /**
  * Test Writing to new urls with common interface
  */
+@Ignore
 public class Issue242Test extends AbstractTestCase
 {
     /**

@@ -20,7 +20,12 @@ package org.jaudiotagger.audio.wav;
 
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.generic.Utils;
-import org.jaudiotagger.audio.iff.*;
+import org.jaudiotagger.audio.iff.BadChunkSummary;
+import org.jaudiotagger.audio.iff.Chunk;
+import org.jaudiotagger.audio.iff.ChunkHeader;
+import org.jaudiotagger.audio.iff.ChunkSummary;
+import org.jaudiotagger.audio.iff.IffHeaderChunk;
+import org.jaudiotagger.audio.iff.PaddingChunkSummary;
 import org.jaudiotagger.audio.wav.chunk.WavCorruptChunkType;
 import org.jaudiotagger.audio.wav.chunk.WavId3Chunk;
 import org.jaudiotagger.audio.wav.chunk.WavListChunk;

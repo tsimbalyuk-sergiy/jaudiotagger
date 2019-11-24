@@ -4,7 +4,11 @@ import junit.framework.TestCase;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.generic.GenericAudioHeader;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 
@@ -27,7 +31,7 @@ public class AiffInfoReaderTest extends TestCase {
                 new PseudoChunk("ANNO", annotation2),
                 new PseudoChunk("(c) ", copyright),
                 new PseudoChunk("AUTH", author)};
-        final File aiff = createAIFF("FORM", "AIFF", pseudoChunks);
+        final File aiff = createAIFF(pseudoChunks);
 
         final AiffInfoReader aiffInfoReader = new AiffInfoReader("test");
         try(FileChannel fc = FileChannel.open(aiff.toPath())) {
@@ -46,7 +50,7 @@ public class AiffInfoReaderTest extends TestCase {
     public void testWithUnknownChunk() throws IOException, CannotReadException {
 
         final String author = "AUTH4567";
-        final File aiff = createAIFF("FORM", "AIFF", new PseudoChunk("XYZ0", "SOME_STUFF"), new PseudoChunk("AUTH", author));
+        final File aiff = createAIFF(new PseudoChunk("XYZ0", "SOME_STUFF"), new PseudoChunk("AUTH", author));
 
         final AiffInfoReader aiffInfoReader = new AiffInfoReader("test");
         try(FileChannel fc = FileChannel.open(aiff.toPath())) {
@@ -60,8 +64,8 @@ public class AiffInfoReaderTest extends TestCase {
 
     private static class PseudoChunk {
 
-        private String chunkType;
-        private String text;
+        private final String chunkType;
+        private final String text;
 
         public PseudoChunk(final String chunkType, final String text) {
             this.chunkType = chunkType;
@@ -77,7 +81,7 @@ public class AiffInfoReaderTest extends TestCase {
         }
     }
 
-    private static File createAIFF(final String form, final String formType, final PseudoChunk... chunks) throws IOException {
+    private static File createAIFF(final PseudoChunk... chunks) throws IOException {
         final File tempFile = File.createTempFile(AiffFileHeaderTest.class.getSimpleName(), ".aif");
         tempFile.deleteOnExit();
 
@@ -97,11 +101,11 @@ public class AiffInfoReaderTest extends TestCase {
             // write header
 
             // write format
-            out.write(form.getBytes(StandardCharsets.US_ASCII));
+            out.write("FORM".getBytes(StandardCharsets.US_ASCII));
             // write size
             out.writeInt(bout.size() + 4);
             // write format type
-            out.write(formType.getBytes(StandardCharsets.US_ASCII));
+            out.write("AIFF".getBytes(StandardCharsets.US_ASCII));
             out.write(bout.toByteArray());
         }
         return tempFile;

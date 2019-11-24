@@ -7,6 +7,7 @@ import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Test WOAR Frame
@@ -36,7 +37,7 @@ public class FrameWOARTest extends AbstractTestCase
     {
         ID3v24Frame frame = new ID3v24Frame(ID3v24Frames.FRAME_ID_URL_ARTIST_WEB);
         FrameBodyWOAR fb = new FrameBodyWOAR();
-        fb.setUrlLink(UNICODE_LINK_START + URLEncoder.encode(UNICODE_LINK_END, "utf8"));
+        fb.setUrlLink(UNICODE_LINK_START + URLEncoder.encode(UNICODE_LINK_END, StandardCharsets.UTF_8));
         //fb.setUrlLink(URLEncoder.encode(UNICODE_LINK_START+UNICODE_LINK_END,"utf8"));
 
         frame.setBody(fb);

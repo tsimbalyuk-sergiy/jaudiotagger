@@ -24,7 +24,7 @@ public abstract class WmaTestCase extends TestCase
     /**
      * The file name of the source file, from which a copy will be created.
      */
-    private String sourceTestFile;
+    private final String sourceTestFile;
 
     /**
      * The file on which tests should be performed.<br>

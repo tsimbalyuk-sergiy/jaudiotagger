@@ -25,7 +25,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
-import static org.jaudiotagger.audio.iff.IffHeaderChunk.*;
+import static org.jaudiotagger.audio.iff.IffHeaderChunk.FORM_HEADER_LENGTH;
+import static org.jaudiotagger.audio.iff.IffHeaderChunk.logger;
 
 /**
  * Processes the Wav Header

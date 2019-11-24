@@ -3,7 +3,10 @@ package org.jaudiotagger.audio.aiff;
 import junit.framework.TestCase;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;

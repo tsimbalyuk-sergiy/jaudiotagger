@@ -12,6 +12,7 @@ import org.jaudiotagger.tag.id3.ID3v24Tag;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyCOMM;
 import org.jaudiotagger.tag.reference.Languages;
 import org.jaudiotagger.tag.reference.PerformerHelper;
+import org.junit.Ignore;
 
 import java.io.File;
 import java.util.Iterator;
@@ -19,6 +20,7 @@ import java.util.Iterator;
 /**
  * Support For Custom fields
  */
+@Ignore
 public class Issue298Test extends AbstractTestCase
 {
     /**

@@ -14,12 +14,14 @@ import org.jaudiotagger.tag.id3.valuepair.ImageFormats;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 import org.jaudiotagger.tag.images.Images;
+import org.junit.Ignore;
 
 import java.io.File;
 
 /**
  * Support For Common Interface for reading and writing coverart
  */
+@Ignore
 public class Issue245Test extends AbstractTestCase
 {
     /**

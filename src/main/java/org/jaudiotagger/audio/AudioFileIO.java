@@ -22,6 +22,7 @@ import org.jaudiotagger.audio.aiff.AiffFileReader;
 import org.jaudiotagger.audio.aiff.AiffFileWriter;
 import org.jaudiotagger.audio.asf.AsfFileReader;
 import org.jaudiotagger.audio.asf.AsfFileWriter;
+import org.jaudiotagger.audio.dff.DffFileReader;
 import org.jaudiotagger.audio.dsf.DsfFileReader;
 import org.jaudiotagger.audio.dsf.DsfFileWriter;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -31,7 +32,11 @@ import org.jaudiotagger.audio.exceptions.NoWritePermissionsException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.audio.flac.FlacFileReader;
 import org.jaudiotagger.audio.flac.FlacFileWriter;
-import org.jaudiotagger.audio.generic.*;
+import org.jaudiotagger.audio.generic.AudioFileModificationListener;
+import org.jaudiotagger.audio.generic.AudioFileReader;
+import org.jaudiotagger.audio.generic.AudioFileWriter;
+import org.jaudiotagger.audio.generic.ModificationHandler;
+import org.jaudiotagger.audio.generic.Utils;
 import org.jaudiotagger.audio.mp3.MP3FileReader;
 import org.jaudiotagger.audio.mp3.MP3FileWriter;
 import org.jaudiotagger.audio.mp4.Mp4FileReader;
@@ -51,7 +56,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
-import org.jaudiotagger.audio.dff.DffFileReader;
 
 /**
  *

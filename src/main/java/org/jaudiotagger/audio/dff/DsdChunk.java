@@ -1,10 +1,9 @@
 package org.jaudiotagger.audio.dff;
 
+import org.jaudiotagger.audio.dsf.DsfChunkType;
 import org.jaudiotagger.audio.generic.Utils;
 
 import java.nio.ByteBuffer;
-
-import org.jaudiotagger.audio.dsf.DsfChunkType;
 
 /**
  * DSD Chunk

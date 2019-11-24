@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public final class MetadataContainerUtils {
 
     // Logger Object
-    public static Logger logger = Logger
+    public static final Logger logger = Logger
             .getLogger("org.jaudiotagger.audio.asf");
 
     public static boolean equals(List<MetadataDescriptor> l1,

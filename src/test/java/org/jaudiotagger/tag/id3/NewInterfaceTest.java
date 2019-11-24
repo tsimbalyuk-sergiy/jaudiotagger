@@ -12,7 +12,16 @@ import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.TagOptionSingleton;
 import org.jaudiotagger.tag.TagTextField;
 import org.jaudiotagger.tag.datatype.DataTypes;
-import org.jaudiotagger.tag.id3.framebody.*;
+import org.jaudiotagger.tag.id3.framebody.AbstractFrameBodyTextInfo;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyAPIC;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyCOMM;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyPOPM;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyTALB;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyTPE1;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyTPE1Test;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyUFID;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyUSLT;
 import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 
 import javax.imageio.ImageIO;

@@ -19,7 +19,6 @@
 package org.jaudiotagger.audio.flac;
 
 import org.jaudiotagger.audio.flac.metadatablock.BlockType;
-import org.jaudiotagger.audio.flac.metadatablock.MetadataBlockDataPadding;
 import org.jaudiotagger.audio.flac.metadatablock.MetadataBlockDataPicture;
 import org.jaudiotagger.audio.flac.metadatablock.MetadataBlockHeader;
 import org.jaudiotagger.audio.generic.AbstractTagCreator;

@@ -4,9 +4,7 @@ import junit.framework.TestCase;
 import org.jaudiotagger.AbstractTestCase;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.CannotReadVideoException;
-import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.mp4.EncoderType;
 import org.jaudiotagger.audio.mp4.Mp4AtomTree;
 import org.jaudiotagger.audio.mp4.Mp4AudioHeader;
@@ -16,7 +14,13 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.mp4.atom.Mp4ContentTypeValue;
 import org.jaudiotagger.tag.mp4.atom.Mp4RatingValue;
-import org.jaudiotagger.tag.mp4.field.*;
+import org.jaudiotagger.tag.mp4.field.Mp4DiscNoField;
+import org.jaudiotagger.tag.mp4.field.Mp4FieldType;
+import org.jaudiotagger.tag.mp4.field.Mp4GenreField;
+import org.jaudiotagger.tag.mp4.field.Mp4TagCoverField;
+import org.jaudiotagger.tag.mp4.field.Mp4TagReverseDnsField;
+import org.jaudiotagger.tag.mp4.field.Mp4TagTextNumberField;
+import org.jaudiotagger.tag.mp4.field.Mp4TrackField;
 import org.jaudiotagger.tag.reference.GenreTypes;
 
 import javax.imageio.ImageIO;
@@ -26,7 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -943,7 +947,7 @@ public class M4aReadTagTest extends TestCase
         {
             //Charset Testing UTf8
             String copyright_symbol = "\u00A9";
-            ByteBuffer bb = Charset.forName("UTF-8").encode(copyright_symbol);
+            ByteBuffer bb = StandardCharsets.UTF_8.encode(copyright_symbol);
             bb.rewind();
             System.out.println("utf8 bb size is:" + bb.limit());
             {
@@ -951,7 +955,7 @@ public class M4aReadTagTest extends TestCase
                 System.out.println("utf8 byte value is " + (bb.get(1) & 0xFF));
             }
 
-            bb = Charset.forName("ISO-8859-1").encode(copyright_symbol);
+            bb = StandardCharsets.ISO_8859_1.encode(copyright_symbol);
             bb.rewind();
             System.out.println("ISO-8859-1 bb size is:" + bb.limit());
             {

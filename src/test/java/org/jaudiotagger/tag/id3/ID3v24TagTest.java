@@ -25,7 +25,14 @@ import org.jaudiotagger.audio.mp3.MP3File;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.TagOptionSingleton;
-import org.jaudiotagger.tag.id3.framebody.*;
+import org.jaudiotagger.tag.id3.framebody.AbstractFrameBodyTextInfo;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyCOMM;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyTALB;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyTCON;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyTDRC;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyTIT2;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyTPE1;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyTRCK;
 
 import java.io.File;
 import java.util.List;

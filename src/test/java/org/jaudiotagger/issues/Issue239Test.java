@@ -6,12 +6,14 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.mp3.MP3File;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.id3.ID3v23Tag;
+import org.junit.Ignore;
 
 import java.io.File;
 
 /**
  * Test Deleteing comments with common interface
  */
+@Ignore
 public class Issue239Test extends AbstractTestCase
 {
     /**

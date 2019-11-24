@@ -22,7 +22,7 @@ public class ID3v24FrameBodyTest {
         String packageName = ID3v24FrameBody.class.getPackage().getName();
         Class<?> bodyClass
           = Class.forName(packageName + ".FrameBody" + frameID);
-        success &= isCompatible(ID3v24FrameBody.class, bodyClass);
+        success &= isCompatible(bodyClass);
       }
     }
     if (success) {
@@ -32,12 +32,12 @@ public class ID3v24FrameBodyTest {
     }
   }
 
-  private boolean isCompatible(Class<?> superType, Class<?> subType) {
+  private boolean isCompatible(Class<?> subType) {
     boolean compatible = true;
-    if (!superType.isAssignableFrom(subType)) {
+    if (!ID3v24FrameBody.class.isAssignableFrom(subType)) {
       compatible = false;
       log.severe(subType.getName() + " does not implement "
-               + superType.getName());
+               + ID3v24FrameBody.class.getName());
     }
     return compatible;
   }

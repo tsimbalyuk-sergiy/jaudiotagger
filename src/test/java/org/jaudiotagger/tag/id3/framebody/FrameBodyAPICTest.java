@@ -8,7 +8,7 @@ import org.jaudiotagger.tag.id3.ID3v24Frames;
  */
 public class FrameBodyAPICTest extends AbstractTestCase
 {
-    public static String DESCRIPTION = "ImageTest";
+    public static final String DESCRIPTION = "ImageTest";
 
     public static FrameBodyAPIC getInitialisedBody()
     {

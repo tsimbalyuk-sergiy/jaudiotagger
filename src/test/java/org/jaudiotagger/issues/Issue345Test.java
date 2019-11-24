@@ -12,6 +12,7 @@ import org.jaudiotagger.tag.id3.ID3v23Tag;
 import org.jaudiotagger.tag.id3.ID3v24Frame;
 import org.jaudiotagger.tag.id3.ID3v24Tag;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyPOPM;
+import org.junit.Ignore;
 
 import java.io.File;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 /**
  * Support For Custom fields
  */
+@Ignore
 public class Issue345Test extends AbstractTestCase
 {
     /**

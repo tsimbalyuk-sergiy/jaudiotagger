@@ -25,7 +25,14 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import static org.jaudiotagger.tag.vorbiscomment.VorbisCommentFieldKey.*;
+import static org.jaudiotagger.tag.vorbiscomment.VorbisCommentFieldKey.ALBUM;
+import static org.jaudiotagger.tag.vorbiscomment.VorbisCommentFieldKey.ARTIST;
+import static org.jaudiotagger.tag.vorbiscomment.VorbisCommentFieldKey.COMMENT;
+import static org.jaudiotagger.tag.vorbiscomment.VorbisCommentFieldKey.DATE;
+import static org.jaudiotagger.tag.vorbiscomment.VorbisCommentFieldKey.DESCRIPTION;
+import static org.jaudiotagger.tag.vorbiscomment.VorbisCommentFieldKey.GENRE;
+import static org.jaudiotagger.tag.vorbiscomment.VorbisCommentFieldKey.TITLE;
+import static org.jaudiotagger.tag.vorbiscomment.VorbisCommentFieldKey.TRACKNUMBER;
 
 /**
  * This class represents the name and content of a tag entry in ogg-files.

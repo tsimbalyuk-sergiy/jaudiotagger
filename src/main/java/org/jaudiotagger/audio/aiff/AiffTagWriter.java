@@ -26,9 +26,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.logging.Logger;
 
-import static org.jaudiotagger.audio.iff.IffHeaderChunk.SIGNATURE_LENGTH;
-import static org.jaudiotagger.audio.iff.IffHeaderChunk.SIZE_LENGTH;
-
 /**
  * Write Aiff Tag.
  */

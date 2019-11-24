@@ -4,7 +4,6 @@ import org.jaudiotagger.AbstractTestCase;
 import org.jaudiotagger.FilePermissionsTest;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.wav.WavCleaner;
 import org.jaudiotagger.audio.wav.WavOptions;

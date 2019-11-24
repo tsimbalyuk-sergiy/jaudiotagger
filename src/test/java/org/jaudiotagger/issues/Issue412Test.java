@@ -9,12 +9,14 @@ import org.jaudiotagger.tag.TagOptionSingleton;
 import org.jaudiotagger.tag.id3.AbstractID3v2Frame;
 import org.jaudiotagger.tag.id3.ID3v23Tag;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyTPOS;
+import org.junit.Ignore;
 
 import java.io.File;
 
 /**
  *
  */
+@Ignore
 public class Issue412Test extends AbstractTestCase
 {
     public void testTXXXSameDescription() throws Exception

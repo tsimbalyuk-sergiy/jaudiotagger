@@ -21,7 +21,11 @@ package org.jaudiotagger.audio.generic;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.utils.FileTypeUtil;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;

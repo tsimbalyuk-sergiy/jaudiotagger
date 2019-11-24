@@ -1,13 +1,11 @@
 package org.jaudiotagger.audio.dff;
 
-import java.io.IOException;
-
+import org.jaudiotagger.audio.exceptions.InvalidChunkException;
 import org.jaudiotagger.audio.generic.Utils;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-
-import org.jaudiotagger.audio.exceptions.InvalidChunkException;
 
 /**
  * Base Chunk for all chuncks in the dff FRM8 Chunk.

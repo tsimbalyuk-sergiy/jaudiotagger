@@ -18,6 +18,13 @@
  */
 package org.jaudiotagger.audio.dsf;
 
+import org.jaudiotagger.audio.exceptions.CannotWriteException;
+import org.jaudiotagger.audio.exceptions.NoWritePermissionsException;
+import org.jaudiotagger.audio.generic.AudioFileWriter2;
+import org.jaudiotagger.audio.generic.Utils;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.id3.AbstractID3v2Tag;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -26,13 +33,6 @@ import java.nio.channels.FileChannel;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-
-import org.jaudiotagger.audio.exceptions.CannotWriteException;
-import org.jaudiotagger.audio.exceptions.NoWritePermissionsException;
-import org.jaudiotagger.audio.generic.AudioFileWriter2;
-import org.jaudiotagger.audio.generic.Utils;
-import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.id3.AbstractID3v2Tag;
 
 /**
  * Write/delete tag info for Dsf file

@@ -9,12 +9,14 @@ import org.jaudiotagger.tag.id3.ID3v24Tag;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXXTest;
 import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
+import org.junit.Ignore;
 
 import java.io.File;
 
 /**
  * Test Android ByteBuffer fix
  */
+@Ignore
 public class Issue302Test extends AbstractTestCase
 {
     public void testAndroidReadFix() throws Exception

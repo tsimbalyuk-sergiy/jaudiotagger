@@ -7,6 +7,7 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagOptionSingleton;
 import org.jaudiotagger.tag.id3.ID3v23Tag;
+import org.junit.Ignore;
 
 import java.io.File;
 
@@ -14,6 +15,7 @@ import java.io.File;
  * Mp3s can handle writing multiple fields which actually map to a single field using generic interface
  * but retrieval shows them as just one field, contrast with Flac
  */
+@Ignore
 public class Issue411Test extends AbstractTestCase
 {
     public void testIssue() throws Exception
