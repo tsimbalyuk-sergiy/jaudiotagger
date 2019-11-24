@@ -27,7 +27,7 @@ public class FilePermissionsTest {
 			boolean threwException = false;
 			try {
 				setFieldAndCommit(testFile, false);
-			} catch (NoWritePermissionsException success) {
+			} catch (CannotWriteException success) {
 				threwException = true;
 			}
 			assertTrue("Expected to throw " + NoWritePermissionsException.class.getSimpleName() + " but didn't",
@@ -60,7 +60,7 @@ public class FilePermissionsTest {
 	        boolean threwException = false;
 	        try {
 	        	setFieldAndCommit(testFile, false);
-	        } catch(NoWritePermissionsException success) {
+	        } catch(CannotWriteException success) {
 	        	threwException=true;
 	        }
 	        assertTrue("Expected to throw " + NoWritePermissionsException.class.getSimpleName() + " but didn't", threwException);

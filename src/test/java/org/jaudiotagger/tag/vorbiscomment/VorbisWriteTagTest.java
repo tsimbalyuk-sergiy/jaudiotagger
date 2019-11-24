@@ -51,6 +51,7 @@ public class VorbisWriteTagTest extends AbstractTestCase
     public void testWriteTagToFile()
     {
         TagOptionSingleton.getInstance().setVorbisAlbumArtistReadOptions(VorbisAlbumArtistReadOptions.READ_ALBUMARTIST);
+        TagOptionSingleton.getInstance().setVorbisAlbumArtistSaveOptions(VorbisAlbumArtistSaveOptions.WRITE_ALBUMARTIST);
         Exception exceptionCaught = null;
         try
         {
