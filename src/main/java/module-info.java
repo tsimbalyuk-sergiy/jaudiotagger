@@ -3,8 +3,8 @@ module org.jaudiotagger {
   requires java.desktop;
 
   exports org.jaudiotagger;
-  exports org.jaudiotagger.logging;
   exports org.jaudiotagger.audio;
+  exports org.jaudiotagger.logging;
   exports org.jaudiotagger.audio.mp3;
   exports org.jaudiotagger.audio.flac;
   exports org.jaudiotagger.audio.flac.metadatablock;
