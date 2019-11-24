@@ -138,12 +138,12 @@ public class AudioFileWriterTest extends TestCase {
         }
 
         @Override
-        protected void deleteTag(final RandomAccessFile raf, final RandomAccessFile tempRaf) throws CannotReadException, CannotWriteException, IOException {
+        protected void deleteTag(Tag tag, RandomAccessFile raf, RandomAccessFile tempRaf) throws CannotReadException, CannotWriteException, IOException {
             // not implemented
         }
 
         @Override
-        protected void writeTag(final Tag tag, final RandomAccessFile raf, final RandomAccessFile rafTemp) throws CannotReadException, CannotWriteException, IOException {
+        protected void writeTag(AudioFile audioFile, Tag tag, RandomAccessFile raf, RandomAccessFile rafTemp) throws CannotReadException, CannotWriteException, IOException {
             // dummy code, just copy from raf to rafTemp
             final long length = raf.length();
             raf.getChannel().transferTo(0, length, rafTemp.getChannel());
@@ -159,5 +159,7 @@ public class AudioFileWriterTest extends TestCase {
                 }
             }
         }
+
+
     }
 }
