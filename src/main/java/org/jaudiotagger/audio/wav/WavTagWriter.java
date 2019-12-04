@@ -35,7 +35,6 @@ import org.jaudiotagger.tag.TagOptionSingleton;
 import org.jaudiotagger.tag.TagTextField;
 import org.jaudiotagger.tag.wav.WavInfoTag;
 import org.jaudiotagger.tag.wav.WavTag;
-import org.tinylog.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -52,6 +51,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Logger;
 
 import static org.jaudiotagger.audio.iff.IffHeaderChunk.SIGNATURE_LENGTH;
 import static org.jaudiotagger.audio.iff.IffHeaderChunk.SIZE_LENGTH;
@@ -69,7 +69,7 @@ public class WavTagWriter
     }
 
     // Logger Object
-//    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.wav");
+    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.wav");
 
     /**
      * Read existing metadata
@@ -139,7 +139,7 @@ public class WavTagWriter
      */
     private ChunkHeader seekToStartOfId3MetadataForChunkSummaryHeader(FileChannel fc, WavTag existingTag) throws IOException, CannotWriteException
     {
-        Logger.info(loggingName+":seekToStartOfIdMetadata:"+existingTag.getStartLocationInFileOfId3Chunk());
+        logger.info(loggingName+":seekToStartOfIdMetadata:"+existingTag.getStartLocationInFileOfId3Chunk());
         fc.position(existingTag.getStartLocationInFileOfId3Chunk());
         final ChunkHeader chunkHeader = new ChunkHeader(ByteOrder.LITTLE_ENDIAN);
         chunkHeader.readHeader(fc);
@@ -154,14 +154,14 @@ public class WavTagWriter
 
         if(WavChunkType.ID3_UPPERCASE.getCode().equals(chunkHeader.getID()))
         {
-            Logger.error(loggingName+":on save ID3 chunk will be correctly set with id3 id");
+            logger.severe(loggingName+":on save ID3 chunk will be correctly set with id3 id");
         }
         return chunkHeader;
     }
 
     private ChunkHeader seekToStartOfId3MetadataForChunkSummaryHeader(FileChannel fc, ChunkSummary chunkSummary) throws IOException, CannotWriteException
     {
-        Logger.error(loggingName+":seekToStartOfIdMetadata:"+chunkSummary.getFileStartLocation());
+        logger.severe(loggingName+":seekToStartOfIdMetadata:"+chunkSummary.getFileStartLocation());
         fc.position(chunkSummary.getFileStartLocation());
         final ChunkHeader chunkHeader = new ChunkHeader(ByteOrder.LITTLE_ENDIAN);
         chunkHeader.readHeader(fc);
@@ -176,7 +176,7 @@ public class WavTagWriter
 
         if(WavChunkType.ID3_UPPERCASE.getCode().equals(chunkHeader.getID()))
         {
-            Logger.error(loggingName+":on save ID3 chunk will be correctly set with id3 id");
+            logger.severe(loggingName+":on save ID3 chunk will be correctly set with id3 id");
         }
         return chunkHeader;
     }
@@ -190,7 +190,7 @@ public class WavTagWriter
      */
     public void delete (Tag tag, Path file) throws CannotWriteException
     {
-        Logger.info(loggingName + ":Deleting metadata from file");
+        logger.info(loggingName + ":Deleting metadata from file");
         try(FileChannel fc = FileChannel.open(file, StandardOpenOption.WRITE, StandardOpenOption.READ))
         {
             WavTag existingTag = getExistingMetadata(file);
@@ -369,7 +369,7 @@ public class WavTagWriter
         }
         //Truncate the file after the last chunk
         final long newLength = fc.size() - lengthTagChunk;
-        Logger.error(loggingName + "Shortening by:"+ lengthTagChunk + " Setting new length to:" + newLength);
+        logger.severe(loggingName + "Shortening by:"+ lengthTagChunk + " Setting new length to:" + newLength);
         fc.truncate(newLength);
     }
 
@@ -381,7 +381,7 @@ public class WavTagWriter
      */
     public void write(final Tag tag, Path file) throws CannotWriteException
     {
-        Logger.trace(loggingName + " Writing tag to file:start");
+        logger.config(loggingName + " Writing tag to file:start");
 
         WavSaveOptions wso = TagOptionSingleton.getInstance().getWavSaveOptions();
         WavTag existingTag = null;
@@ -475,7 +475,7 @@ public class WavTagWriter
         }
 
 
-        Logger.error(loggingName + " Writing tag to file:Done");
+        logger.severe(loggingName + " Writing tag to file:Done");
     }
 
     private void deletePaddingChunk(final FileChannel fc, int endOfExistingChunk, final int lengthTagChunk) throws IOException
@@ -495,7 +495,7 @@ public class WavTagWriter
         }
         //Truncate the file after the last chunk
         final long newLength = fc.size() - lengthTagChunk;
-        Logger.trace(loggingName + "-------------Setting new length to:" + newLength);
+        logger.config(loggingName + "-------------Setting new length to:" + newLength);
         fc.truncate(newLength);
     }
 
@@ -639,7 +639,7 @@ public class WavTagWriter
                 TagTextField next = (TagTextField) nextField;
                 WavInfoIdentifier wii = WavInfoIdentifier.getByFieldKey(FieldKey.valueOf(next.getId()));
                 baos.write(wii.getCode().getBytes(StandardCharsets.US_ASCII));
-                Logger.trace(loggingName + " Writing:" + wii.getCode() + ":" + next.getContent());
+                logger.config(loggingName + " Writing:" + wii.getCode() + ":" + next.getContent());
 
                 //TODO Is UTF8 allowed format
                 byte[] contentConvertedToBytes = next.getContent().getBytes(StandardCharsets.UTF_8);
@@ -659,7 +659,7 @@ public class WavTagWriter
                     if(TagOptionSingleton.getInstance().isWriteWavForTwonky())
                     {
                         baos.write(WavInfoIdentifier.TWONKY_TRACKNO.getCode().getBytes(StandardCharsets.US_ASCII));
-                        Logger.trace(loggingName + " Writing:" + WavInfoIdentifier.TWONKY_TRACKNO.getCode() + ":" + next.getContent());
+                        logger.config(loggingName + " Writing:" + WavInfoIdentifier.TWONKY_TRACKNO.getCode() + ":" + next.getContent());
 
                         baos.write(Utils.getSizeLEInt32(contentConvertedToBytes.length));
                         baos.write(contentConvertedToBytes);
@@ -690,7 +690,7 @@ public class WavTagWriter
                   (!isTrackRewritten && TagOptionSingleton.getInstance().isWriteWavForTwonky()))
                 {
                     baos.write(next.getId().getBytes(StandardCharsets.US_ASCII));
-                    Logger.trace(loggingName + " Writing:" + next.getId() + ":" + next.getContent());
+                    logger.config(loggingName + " Writing:" + next.getId() + ":" + next.getContent());
                     byte[] contentConvertedToBytes = next.getContent().getBytes(StandardCharsets.UTF_8);
                     baos.write(Utils.getSizeLEInt32(contentConvertedToBytes.length));
                     baos.write(contentConvertedToBytes);
@@ -951,7 +951,7 @@ public class WavTagWriter
                 while (li.hasPrevious())
                 {
                     ChunkSummary next = li.previous();
-                    Logger.trace(">>>>Deleting--"+next.getChunkId()+"---"+next.getFileStartLocation()+"--"+next.getEndLocation());
+                    logger.config(">>>>Deleting--"+next.getChunkId()+"---"+next.getFileStartLocation()+"--"+next.getEndLocation());
                     if (Utils.isOddLength(next.getEndLocation()))
                     {
                         deleteTagChunk(fc, (int) next.getEndLocation(), (int) ((next.getEndLocation() + 1) - next.getFileStartLocation()));
@@ -1048,7 +1048,7 @@ public class WavTagWriter
         ChunkHeader infoChunkHeader = seekToStartOfListInfoMetadata(fc, existingTag);
         if (isInfoTagAtEndOfFileAllowingForPaddingByte(existingTag, fc))
         {
-            Logger.error("writinginfo");
+            logger.severe("writinginfo");
             writeInfoChunk(fc, existingTag.getInfoTag(), infoTagBuffer);
         }
         else
@@ -1122,7 +1122,7 @@ public class WavTagWriter
                 while (li.hasPrevious())
                 {
                     ChunkSummary next = li.previous();
-                    Logger.trace(">>>>Deleting--"+next.getChunkId()+"---"+next.getFileStartLocation()+"--"+next.getEndLocation());
+                    logger.config(">>>>Deleting--"+next.getChunkId()+"---"+next.getFileStartLocation()+"--"+next.getEndLocation());
                     if (Utils.isOddLength(next.getEndLocation()))
                     {
                         deleteTagChunk(fc, (int) next.getEndLocation(), (int) ((next.getEndLocation() + 1) - next.getFileStartLocation()));
@@ -1185,7 +1185,7 @@ public class WavTagWriter
                 while (li.hasPrevious())
                 {
                     ChunkSummary next = li.previous();
-                    Logger.trace(">>>>Deleting--"+next.getChunkId()+"---"+next.getFileStartLocation()+"--"+next.getEndLocation());
+                    logger.config(">>>>Deleting--"+next.getChunkId()+"---"+next.getFileStartLocation()+"--"+next.getEndLocation());
                     if (Utils.isOddLength(next.getEndLocation()))
                     {
                         deleteTagChunk(fc, (int) next.getEndLocation(), (int) ((next.getEndLocation() + 1) - next.getFileStartLocation()));

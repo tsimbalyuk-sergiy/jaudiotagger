@@ -23,7 +23,6 @@ import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.jaudiotagger.tag.reference.ID3V2Version;
 import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag;
 import org.jaudiotagger.tag.wav.WavTag;
-import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,6 +30,7 @@ import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  * <p>This is the main object manipulated by the user representing an audiofile, its properties and its tag.
@@ -47,7 +47,7 @@ import java.util.ArrayList;
 public class AudioFile
 {
     //Logger
-////    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio");
+    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio");
 
     /**
      *
@@ -221,10 +221,10 @@ public class AudioFile
      */
     public void checkFileExists(File file)throws FileNotFoundException
     {
-        Logger.trace("Reading file:" + "path" + file.getPath() + ":abs:" + file.getAbsolutePath());
+        logger.config("Reading file:" + "path" + file.getPath() + ":abs:" + file.getAbsolutePath());
         if (!file.exists())
         {
-            Logger.error("Unable to find:" + file.getPath());
+            logger.severe("Unable to find:" + file.getPath());
             throw new FileNotFoundException(ErrorMessage.UNABLE_TO_FIND_FILE.getMsg(file.getPath()));
         }
     }
@@ -250,8 +250,8 @@ public class AudioFile
             //May not even be readable
             if(!Files.isReadable(path))
             {
-                Logger.error("Unable to read file:" + path);
-                Logger.error(Permissions.displayPermissions(path));
+                logger.severe("Unable to read file:" + path);
+                logger.severe(Permissions.displayPermissions(path));
                 throw new NoReadPermissionsException(ErrorMessage.GENERAL_READ_FAILED_DO_NOT_HAVE_PERMISSION_TO_READ_FILE.getMsg(path));
             }
             newFile = new RandomAccessFile(file, "r");
@@ -260,8 +260,8 @@ public class AudioFile
         {
             if (TagOptionSingleton.getInstance().isCheckIsWritable() && !Files.isWritable(path))
             {
-                Logger.error(Permissions.displayPermissions(file.toPath()));
-                Logger.error(Permissions.displayPermissions(path));
+                logger.severe(Permissions.displayPermissions(file.toPath()));
+                logger.severe(Permissions.displayPermissions(path));
                 throw new ReadOnlyFileException(ErrorMessage.NO_PERMISSIONS_TO_WRITE_TO_FILE.getMsg(path));
             }
             newFile = new RandomAccessFile(file, "rw");

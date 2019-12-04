@@ -24,7 +24,6 @@ import org.jaudiotagger.tag.id3.valuepair.ImageFormats;
 import org.jaudiotagger.tag.mp4.Mp4FieldKey;
 import org.jaudiotagger.tag.mp4.atom.Mp4DataBox;
 import org.jaudiotagger.tag.mp4.atom.Mp4NameBox;
-import org.tinylog.Logger;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -75,7 +74,7 @@ public class Mp4TagCoverField extends Mp4TagBinaryField
         this.imageType=imageType;
         if(!Mp4FieldType.isCoverArtType(imageType))
         {
-            Logger.warn(ErrorMessage.MP4_IMAGE_FORMAT_IS_NOT_TO_EXPECTED_TYPE.getMsg(imageType));
+            logger.warning(ErrorMessage.MP4_IMAGE_FORMAT_IS_NOT_TO_EXPECTED_TYPE.getMsg(imageType));
         }
     }
 
@@ -111,7 +110,7 @@ public class Mp4TagCoverField extends Mp4TagBinaryField
         }
         else
         {
-            Logger.warn(ErrorMessage.GENERAL_UNIDENITIFED_IMAGE_FORMAT.getMsg());
+            logger.warning(ErrorMessage.GENERAL_UNIDENITIFED_IMAGE_FORMAT.getMsg());
             imageType = Mp4FieldType.COVERART_PNG;
         }
     }

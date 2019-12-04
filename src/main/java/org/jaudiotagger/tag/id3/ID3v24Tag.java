@@ -55,7 +55,6 @@ import org.jaudiotagger.tag.lyrics3.Lyrics3v2;
 import org.jaudiotagger.tag.lyrics3.Lyrics3v2Field;
 import org.jaudiotagger.tag.reference.GenreTypes;
 import org.jaudiotagger.tag.reference.PictureTypes;
-import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,6 +66,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Represents an ID3v2.4 tag.
@@ -349,7 +349,7 @@ public class ID3v24Tag extends AbstractID3v2Tag
      */
     protected void copyPrimitives(AbstractID3v2Tag copyObj)
     {
-        Logger.trace(getLoggingFilename() +":Copying primitives");
+        logger.config(getLoggingFilename() +":Copying primitives");
         super.copyPrimitives(copyObj);
 
         if (copyObj instanceof ID3v24Tag)
@@ -394,7 +394,7 @@ public class ID3v24Tag extends AbstractID3v2Tag
         }
         catch (InvalidFrameException ife)
         {
-            Logger.error("{}",getLoggingFilename() + ":Unable to convert frame:" + frame.getIdentifier());
+            logger.log(Level.SEVERE, getLoggingFilename() + ":Unable to convert frame:" + frame.getIdentifier());
         }
     }
 
@@ -504,7 +504,7 @@ public class ID3v24Tag extends AbstractID3v2Tag
             else
             {
                 //we just lose this frame, we have already got one with the correct id.
-                Logger.warn(getLoggingFilename() +":Found duplicate TDRC frame in invalid situation,discarding:" + newFrame.getIdentifier());
+                logger.warning(getLoggingFilename() +":Found duplicate TDRC frame in invalid situation,discarding:" + newFrame.getIdentifier());
             }
         }
         else
@@ -523,7 +523,7 @@ public class ID3v24Tag extends AbstractID3v2Tag
      */
     public ID3v24Tag(ID3v24Tag copyObject)
     {
-        Logger.trace(getLoggingFilename() +":Creating tag from another tag of same type");
+        logger.config(getLoggingFilename() +":Creating tag from another tag of same type");
         copyPrimitives(copyObject);
         copyFrames(copyObject);
     }
@@ -535,7 +535,7 @@ public class ID3v24Tag extends AbstractID3v2Tag
      */
     public ID3v24Tag(AbstractTag mp3tag)
     {
-        Logger.trace(getLoggingFilename() +":Creating tag from a tag of a different version");
+        logger.config(getLoggingFilename() +":Creating tag from a tag of a different version");
         frameMap = new LinkedHashMap();
         encryptedFrameMap = new LinkedHashMap();
 
@@ -646,7 +646,7 @@ public class ID3v24Tag extends AbstractID3v2Tag
                     }
                     catch (InvalidTagException ex)
                     {
-                        Logger.warn(getLoggingFilename() +":Unable to convert Lyrics3 to v24 Frame:Frame Identifier");
+                        logger.warning(getLoggingFilename() +":Unable to convert Lyrics3 to v24 Frame:Frame Identifier");
                     }
                 }
             }
@@ -716,7 +716,7 @@ public class ID3v24Tag extends AbstractID3v2Tag
             }
         }
         size += super.getSize();
-        Logger.trace(getLoggingFilename() +":Tag Size is" + size);
+        logger.finer(getLoggingFilename() +":Tag Size is" + size);
         return size;
     }
 
@@ -782,43 +782,43 @@ public class ID3v24Tag extends AbstractID3v2Tag
         //Not allowable/Unknown Flags
         if ((flags & FileConstants.BIT3) != 0)
         {
-            Logger.warn(ErrorMessage.ID3_INVALID_OR_UNKNOWN_FLAG_SET.getMsg(getLoggingFilename(), FileConstants.BIT3));
+            logger.warning(ErrorMessage.ID3_INVALID_OR_UNKNOWN_FLAG_SET.getMsg(getLoggingFilename(), FileConstants.BIT3));
         }
 
         if ((flags & FileConstants.BIT2) != 0)
         {
-            Logger.warn(ErrorMessage.ID3_INVALID_OR_UNKNOWN_FLAG_SET.getMsg(getLoggingFilename(), FileConstants.BIT2));
+            logger.warning(ErrorMessage.ID3_INVALID_OR_UNKNOWN_FLAG_SET.getMsg(getLoggingFilename(), FileConstants.BIT2));
         }
 
         if ((flags & FileConstants.BIT1) != 0)
         {
-            Logger.warn(ErrorMessage.ID3_INVALID_OR_UNKNOWN_FLAG_SET.getMsg(getLoggingFilename(), FileConstants.BIT1));
+            logger.warning(ErrorMessage.ID3_INVALID_OR_UNKNOWN_FLAG_SET.getMsg(getLoggingFilename(), FileConstants.BIT1));
         }
 
         if ((flags & FileConstants.BIT0) != 0)
         {
-            Logger.warn(ErrorMessage.ID3_INVALID_OR_UNKNOWN_FLAG_SET.getMsg(getLoggingFilename(), FileConstants.BIT0));
+            logger.warning(ErrorMessage.ID3_INVALID_OR_UNKNOWN_FLAG_SET.getMsg(getLoggingFilename(), FileConstants.BIT0));
         }
 
 
         if (isUnsynchronization())
         {
-            Logger.trace(ErrorMessage.ID3_TAG_UNSYNCHRONIZED.getMsg(getLoggingFilename()));
+            logger.config(ErrorMessage.ID3_TAG_UNSYNCHRONIZED.getMsg(getLoggingFilename()));
         }
 
         if (extended)
         {
-            Logger.trace(ErrorMessage.ID3_TAG_EXTENDED.getMsg(getLoggingFilename()));
+            logger.config(ErrorMessage.ID3_TAG_EXTENDED.getMsg(getLoggingFilename()));
         }
 
         if (experimental)
         {
-            Logger.trace(ErrorMessage.ID3_TAG_EXPERIMENTAL.getMsg(getLoggingFilename()));
+            logger.config(ErrorMessage.ID3_TAG_EXPERIMENTAL.getMsg(getLoggingFilename()));
         }
 
         if (footer)
         {
-            Logger.warn(ErrorMessage.ID3_TAG_FOOTER.getMsg(getLoggingFilename()));
+            logger.warning(ErrorMessage.ID3_TAG_FOOTER.getMsg(getLoggingFilename()));
         }
     }
 
@@ -905,7 +905,7 @@ public class ID3v24Tag extends AbstractID3v2Tag
 
         // Read the size, this is size of tag apart from tag header
         size = ID3SyncSafeInteger.bufferToValue(byteBuffer);
-        Logger.trace(getLoggingFilename() + ":" + "Reading tag from file size set in header is:" + size);
+        logger.config(getLoggingFilename() + ":" + "Reading tag from file size set in header is:" + size);
 
         if (extended)
         {
@@ -924,7 +924,7 @@ public class ID3v24Tag extends AbstractID3v2Tag
      */
     protected void readFrames(ByteBuffer byteBuffer, int size)
     {
-        Logger.trace(getLoggingFilename() + ":" + "Start of frame body at" + byteBuffer.position());
+        logger.finest(getLoggingFilename() + ":" + "Start of frame body at" + byteBuffer.position());
         //Now start looking for frames
         ID3v24Frame next;
         frameMap = new LinkedHashMap();
@@ -933,14 +933,14 @@ public class ID3v24Tag extends AbstractID3v2Tag
         //Read the size from the Tag Header
         this.fileReadSize = size;
         // Read the frames until got to upto the size as specified in header
-        Logger.trace(getLoggingFilename() + ":" + "Start of frame body at:" + byteBuffer.position() + ",frames data size is:" + size);
+        logger.finest(getLoggingFilename() + ":" + "Start of frame body at:" + byteBuffer.position() + ",frames data size is:" + size);
         while (byteBuffer.position() <= size)
         {
             String id;
             try
             {
                 //Read Frame
-                Logger.trace(getLoggingFilename() + ":" + "looking for next frame at:" + byteBuffer.position());
+                logger.config(getLoggingFilename() + ":" + "looking for next frame at:" + byteBuffer.position());
                 next = new ID3v24Frame(byteBuffer, getLoggingFilename());
                 id = next.getIdentifier();
                 loadFrameIntoMap(id, next);
@@ -948,18 +948,18 @@ public class ID3v24Tag extends AbstractID3v2Tag
             //Found Padding, no more frames
             catch (PaddingException ex)
             {
-                Logger.trace(getLoggingFilename() + ":Found padding starting at:" + byteBuffer.position());
+                logger.config(getLoggingFilename() + ":Found padding starting at:" + byteBuffer.position());
                 break;
             }
             //Found Empty Frame
             catch (EmptyFrameException ex)
             {
-                Logger.warn(getLoggingFilename() + ":" + "Empty Frame:" + ex.getMessage());
+                logger.warning(getLoggingFilename() + ":" + "Empty Frame:" + ex.getMessage());
                 this.emptyFrameBytes += TAG_HEADER_LENGTH;
             }
             catch (InvalidFrameIdentifierException ifie)
             {
-                Logger.trace(getLoggingFilename() + ":" + "Invalid Frame Identifier:" + ifie.getMessage());
+                logger.config(getLoggingFilename() + ":" + "Invalid Frame Identifier:" + ifie.getMessage());
                 this.invalidFrames++;
                 //Don't try and find any more frames
                 break;
@@ -967,7 +967,7 @@ public class ID3v24Tag extends AbstractID3v2Tag
             //Problem trying to find frame
             catch (InvalidFrameException ife)
             {
-                Logger.warn(getLoggingFilename() + ":" + "Invalid Frame:" + ife.getMessage());
+                logger.warning(getLoggingFilename() + ":" + "Invalid Frame:" + ife.getMessage());
                 this.invalidFrames++;
                 //Don't try and find any more frames
                 break;
@@ -976,7 +976,7 @@ public class ID3v24Tag extends AbstractID3v2Tag
             //in case we can read the next frame
             catch(InvalidDataTypeException idete)
             {
-                Logger.warn(getLoggingFilename() + ":Corrupt Frame:" + idete.getMessage());
+                logger.warning(getLoggingFilename() + ":Corrupt Frame:" + idete.getMessage());
                 this.invalidFrames++;
                 continue;
             }
@@ -1136,7 +1136,7 @@ public class ID3v24Tag extends AbstractID3v2Tag
     public long write(File file, long audioStartLocation) throws IOException
     {
         setLoggingFilename(file.getName());
-        Logger.trace(getLoggingFilename()+":Writing tag to file:");
+        logger.config(getLoggingFilename()+":Writing tag to file:");
 
         //Write Body Buffer
         byte[] bodyByteBuffer = writeFramesToBuffer().toByteArray();
@@ -1158,7 +1158,7 @@ public class ID3v24Tag extends AbstractID3v2Tag
     @Override
     public void write(WritableByteChannel channel, int currentTagSize) throws IOException
     {
-        Logger.trace(getLoggingFilename() +":Writing tag to channel");
+        logger.config(getLoggingFilename() +":Writing tag to channel");
 
         byte[] bodyByteBuffer = writeFramesToBuffer().toByteArray();
 

@@ -27,7 +27,6 @@ import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.InvalidTagException;
 import org.jaudiotagger.tag.datatype.DataTypes;
 import org.jaudiotagger.tag.datatype.StringSizeTerminated;
-import org.tinylog.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -126,13 +125,13 @@ public abstract class AbstractFrameBodyUrlLink extends AbstractID3v2FrameBody
             //We still cant convert so just set log error and set to blank to allow save to continue
             if (!encoder.canEncode(getUrlLink()))
             {
-                Logger.warn(ErrorMessage.MP3_UNABLE_TO_ENCODE_URL.getMsg(origUrl));
+                logger.warning(ErrorMessage.MP3_UNABLE_TO_ENCODE_URL.getMsg(origUrl));
                 setUrlLink("");
             }
             //it was ok, just note the modification made
             else
             {
-                Logger.warn(ErrorMessage.MP3_URL_SAVED_ENCODED.getMsg(origUrl, getUrlLink()));
+                logger.warning(ErrorMessage.MP3_URL_SAVED_ENCODED.getMsg(origUrl, getUrlLink()));
             }
         }
         super.write(tagBuffer);
@@ -168,7 +167,7 @@ public abstract class AbstractFrameBodyUrlLink extends AbstractID3v2FrameBody
         {
             //Should never happen as utf-8 is always availablebut in case it does we just return the utl
             //unmodified
-            Logger.warn("Uable to url encode because utf-8 charset not available:" + uee.getMessage());
+            logger.warning("Uable to url encode because utf-8 charset not available:" + uee.getMessage());
             return url;
         }
     }

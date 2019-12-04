@@ -5,7 +5,6 @@ import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.mp4.Mp4FieldKey;
 import org.jaudiotagger.tag.mp4.atom.Mp4DataBox;
 import org.jaudiotagger.tag.reference.GenreTypes;
-import org.tinylog.Logger;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -118,12 +117,12 @@ public class Mp4GenreField extends Mp4TagTextNumberField
             //as null so apps can handle if they wish, but we do display a warning to make them aware.
             if (content == null)
             {
-                Logger.warn(ErrorMessage.MP4_GENRE_OUT_OF_RANGE.getMsg(genreId));
+                logger.warning(ErrorMessage.MP4_GENRE_OUT_OF_RANGE.getMsg(genreId));
             }
         }
         else
         {
-            Logger.warn(ErrorMessage.MP4_NO_GENREID_FOR_GENRE.getMsg(header.getDataLength()));
+            logger.warning(ErrorMessage.MP4_NO_GENREID_FOR_GENRE.getMsg(header.getDataLength()));
         }
     }
 }

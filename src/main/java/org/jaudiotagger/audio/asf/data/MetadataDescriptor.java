@@ -21,7 +21,6 @@ package org.jaudiotagger.audio.asf.data;
 import org.jaudiotagger.audio.asf.util.Utils;
 import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.TagOptionSingleton;
-import org.tinylog.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,6 +28,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * This structure represents metadata objects in ASF {@link MetadataContainer}.<br>
@@ -55,7 +55,7 @@ public class MetadataDescriptor implements Comparable<MetadataDescriptor>, Clone
     /**
      * Logger instance.
      */
-//    private static final Logger LOGGER = Logger.getLogger("org.jaudiotagger.audio.asf.data");
+    private static final Logger LOGGER = Logger.getLogger("org.jaudiotagger.audio.asf.data");
 
     /**
      * The maximum language index allowed. (exclusive)
@@ -350,7 +350,7 @@ public class MetadataDescriptor implements Comparable<MetadataDescriptor>, Clone
         }
         catch (final IOException e)
         {
-            Logger.warn(e.getMessage());
+            LOGGER.warning(e.getMessage());
         }
         return result.toByteArray();
     }
@@ -554,7 +554,7 @@ public class MetadataDescriptor implements Comparable<MetadataDescriptor>, Clone
                 }
                 catch (final UnsupportedEncodingException e)
                 {
-                    Logger.warn(e.getMessage());
+                    LOGGER.warning(e.getMessage());
                 }
                 break;
             default:

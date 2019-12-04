@@ -1,7 +1,6 @@
 module org.jaudiotagger {
   requires java.logging;
   requires java.desktop;
-  requires org.tinylog.api;
 
   exports org.jaudiotagger;
   exports org.jaudiotagger.audio;

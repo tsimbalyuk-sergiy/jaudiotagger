@@ -39,7 +39,6 @@ import org.jaudiotagger.tag.id3.framebody.FrameBodyTIT2;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyTPE1;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyTRCK;
 import org.jaudiotagger.tag.reference.GenreTypes;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -50,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 
 /**
@@ -218,7 +218,7 @@ public class ID3v11Tag extends ID3v1Tag
                     	if(null!= genreId) this.genre = genreId.byteValue();
                     	else
                     	{
-                    		Logger.warn("{}",getLoggingFilename() + ":" + "Unable to convert TCON frame to format suitable for v11 tag", ex);
+                    		logger.log(Level.WARNING, getLoggingFilename() + ":" + "Unable to convert TCON frame to format suitable for v11 tag", ex);
                     		this.genre = (byte) ID3v1Tag.GENRE_UNDEFINED;
                     	}
                     }
@@ -513,7 +513,7 @@ public class ID3v11Tag extends ID3v1Tag
         {
             throw new TagNotFoundException("ID3v1 tag not found");
         }
-        Logger.trace("Reading v1.1 tag");
+        logger.finer("Reading v1.1 tag");
 
         //Do single file read of data to cut down on file reads
         byte[] dataBuffer = new byte[TAG_LENGTH];
@@ -562,7 +562,7 @@ public class ID3v11Tag extends ID3v1Tag
      */
     public void write(RandomAccessFile file) throws IOException
     {
-        Logger.trace("Saving ID3v11 tag to file");
+        logger.config("Saving ID3v11 tag to file");
         byte[] buffer = new byte[TAG_LENGTH];
         int i;
         String str;
@@ -623,7 +623,7 @@ public class ID3v11Tag extends ID3v1Tag
         }
         file.write(buffer);
 
-        Logger.trace("Saved ID3v11 tag to file");
+        logger.config("Saved ID3v11 tag to file");
     }
 
 

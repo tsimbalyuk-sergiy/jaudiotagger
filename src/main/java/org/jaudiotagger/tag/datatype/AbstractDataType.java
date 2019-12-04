@@ -29,6 +29,7 @@ import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 /**
  * Represents a field/data type that can be held within a frames body, these map loosely onto
@@ -39,7 +40,7 @@ public abstract class AbstractDataType
     protected static final String TYPE_ELEMENT = "element";
 
     //Logger
-//    public static Logger logger = Logger.getLogger("org.jaudiotagger.tag.datatype");
+    public static Logger logger = Logger.getLogger("org.jaudiotagger.tag.datatype");
 
     /**
      * Holds the data

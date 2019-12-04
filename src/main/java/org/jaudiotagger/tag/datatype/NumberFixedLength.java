@@ -26,7 +26,6 @@ package org.jaudiotagger.tag.datatype;
 import org.jaudiotagger.tag.InvalidDataTypeException;
 import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
 import org.jaudiotagger.tag.id3.ID3Tags;
-import org.tinylog.Logger;
 
 
 /**
@@ -144,7 +143,7 @@ public class NumberFixedLength extends AbstractDataType
             lvalue += (arr[i] & 0xff);
         }
         value = lvalue;
-        Logger.trace("Read NumberFixedlength:" + value);
+        logger.config("Read NumberFixedlength:" + value);
     }
 
 

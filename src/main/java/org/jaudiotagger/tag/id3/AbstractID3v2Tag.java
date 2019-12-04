@@ -55,7 +55,6 @@ import org.jaudiotagger.tag.id3.valuepair.StandardIPLSKey;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.reference.Languages;
 import org.jaudiotagger.tag.reference.PictureTypes;
-import org.tinylog.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -85,7 +84,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.TreeSet;
-//import java.util.logging.Level;
+import java.util.logging.Level;
 
 /**
  * This is the abstract base class for all ID3v2 tags.
@@ -275,7 +274,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
      */
     protected void copyPrimitives(AbstractID3v2Tag copyObject)
     {
-        Logger.trace("Copying Primitives");
+        logger.config("Copying Primitives");
         //Primitives type variables common to all IDv2 Tags
         this.duplicateFrameId = copyObject.duplicateFrameId;
         this.duplicateBytes = copyObject.duplicateBytes;
@@ -929,7 +928,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
      */
     public void setFrame(String identifier, List<AbstractID3v2Frame> multiFrame)
     {
-        Logger.trace("Adding " + multiFrame.size() + " frames for " + identifier);
+        logger.finest("Adding " + multiFrame.size() + " frames for " + identifier);
         frameMap.put(identifier, multiFrame);
     }
 
@@ -1052,7 +1051,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
      */
     public void removeFrame(String identifier)
     {
-        Logger.trace("Removing frame with identifier:" + identifier);
+        logger.config("Removing frame with identifier:" + identifier);
         frameMap.remove(identifier);
     }
 
@@ -1070,7 +1069,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
             {
                 if (((AbstractID3v2Frame) o).getBody() instanceof FrameBodyUnsupported)
                 {
-                    Logger.trace("Removing frame" + ((AbstractID3v2Frame) o).getIdentifier());
+                    logger.finest("Removing frame" + ((AbstractID3v2Frame) o).getIdentifier());
                     i.remove();
                 }
             }
@@ -1098,7 +1097,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
         //with the same id
         for (String match : result)
         {
-            Logger.trace("Removing frame with identifier:" + match + "because starts with:" + identifier);
+            logger.finest("Removing frame with identifier:" + match + "because starts with:" + identifier);
             frameMap.remove(match);
         }
     }
@@ -1128,7 +1127,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
      */
     protected FileLock getFileLockForWriting(FileChannel fileChannel, String filePath) throws IOException
     {
-        Logger.trace("locking fileChannel for " + filePath);
+        logger.finest("locking fileChannel for " + filePath);
         FileLock fileLock;
         try
         {
@@ -1291,7 +1290,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
     public boolean seek(ByteBuffer byteBuffer)
     {
         byteBuffer.rewind();
-        Logger.trace("ByteBuffer pos:" + byteBuffer.position() + ":limit" + byteBuffer.limit() + ":cap" + byteBuffer.capacity());
+        logger.config("ByteBuffer pos:" + byteBuffer.position() + ":limit" + byteBuffer.limit() + ":cap" + byteBuffer.capacity());
 
 
         byte[] tagIdentifier = new byte[FIELD_TAGID_LENGTH];
@@ -1349,7 +1348,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
      */
     public void adjustPadding(File file, int paddingSize, long audioStart) throws FileNotFoundException, IOException
     {
-        Logger.trace("Need to move audio file to accommodate tag");
+        logger.finer("Need to move audio file to accommodate tag");
         if (TagOptionSingleton.getInstance().isPreserveFileIdentity()) {
             adjustPaddingInPlace(file, paddingSize, audioStart);
         } else {
@@ -1358,7 +1357,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
     }
 
     private void adjustPaddingWithTempFile(final File file, final int paddingSize, final long audioStart) throws IOException {
-        Logger.trace("Adjusting padding with temp file.");
+        logger.finer("Adjusting padding with temp file.");
         FileChannel fcIn = null;
         FileChannel fcOut;
 
@@ -1371,20 +1370,20 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
         try
         {
             paddedFile = File.createTempFile(Utils.getBaseFilenameForTempFile(file), ".new", file.getParentFile());
-            Logger.trace("Created temp file:" + paddedFile.getName() + " for " + file.getName());
+            logger.finest("Created temp file:" + paddedFile.getName() + " for " + file.getName());
         }
         //Vista:Can occur if have Write permission on folder this file would be created in Denied
         catch (IOException ioe)
         {
-            Logger.error("{}",ioe.getMessage(), ioe);
+            logger.log(Level.SEVERE, ioe.getMessage(), ioe);
             if (ioe.getMessage().equals(FileSystemMessage.ACCESS_IS_DENIED.getMsg()))
             {
-                Logger.error(ErrorMessage.GENERAL_WRITE_FAILED_TO_CREATE_TEMPORARY_FILE_IN_FOLDER.getMsg(file.getName(), file.getParentFile().getPath()));
+                logger.severe(ErrorMessage.GENERAL_WRITE_FAILED_TO_CREATE_TEMPORARY_FILE_IN_FOLDER.getMsg(file.getName(), file.getParentFile().getPath()));
                 throw new UnableToCreateFileException(ErrorMessage.GENERAL_WRITE_FAILED_TO_CREATE_TEMPORARY_FILE_IN_FOLDER.getMsg(file.getName(), file.getParentFile().getPath()));
             }
             else
             {
-                Logger.error(ErrorMessage.GENERAL_WRITE_FAILED_TO_CREATE_TEMPORARY_FILE_IN_FOLDER.getMsg(file.getName(), file.getParentFile().getPath()));
+                logger.severe(ErrorMessage.GENERAL_WRITE_FAILED_TO_CREATE_TEMPORARY_FILE_IN_FOLDER.getMsg(file.getName(), file.getParentFile().getPath()));
                 throw new UnableToCreateFileException(ErrorMessage.GENERAL_WRITE_FAILED_TO_CREATE_TEMPORARY_FILE_IN_FOLDER.getMsg(file.getName(), file.getParentFile().getPath()));
             }
         }
@@ -1396,8 +1395,8 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
         //Vista:Can occur if have special permission Create Folder/Append Data denied
         catch (FileNotFoundException ioe)
         {
-            Logger.error("{}",ioe.getMessage(), ioe);
-            Logger.error(ErrorMessage.GENERAL_WRITE_FAILED_TO_MODIFY_TEMPORARY_FILE_IN_FOLDER.getMsg(file.getName(), file.getParentFile().getPath()));
+            logger.log(Level.SEVERE, ioe.getMessage(), ioe);
+            logger.severe(ErrorMessage.GENERAL_WRITE_FAILED_TO_MODIFY_TEMPORARY_FILE_IN_FOLDER.getMsg(file.getName(), file.getParentFile().getPath()));
             throw new UnableToModifyFileException(ErrorMessage.GENERAL_WRITE_FAILED_TO_MODIFY_TEMPORARY_FILE_IN_FOLDER.getMsg(file.getName(), file.getParentFile().getPath()));
         }
 
@@ -1411,7 +1410,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
             long written = fcOut.write(paddingBuffer);
 
             //Write rest of file starting from audio
-            Logger.trace("Copying:" + (file.length() - audioStart) + "bytes");
+            logger.finer("Copying:" + (file.length() - audioStart) + "bytes");
 
             //If the amount to be copied is very large we split into 10MB lumps to try and avoid
             //out of memory errors
@@ -1420,7 +1419,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
             {
                 fcIn.position(audioStart);
                 long written2 = fcOut.transferFrom(fcIn, paddingSize, audiolength);
-                Logger.trace("Written padding:" + written + " Data:" + written2);
+                logger.finer("Written padding:" + written + " Data:" + written2);
                 if (written2 != audiolength)
                 {
                     throw new RuntimeException(ErrorMessage.MP3_UNABLE_TO_ADJUST_PADDING.getMsg(audiolength, written2));
@@ -1436,7 +1435,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
                     written2 += fcIn.transferTo(audioStart + (i * MAXIMUM_WRITABLE_CHUNK_SIZE), MAXIMUM_WRITABLE_CHUNK_SIZE, fcOut);
                 }
                 written2 += fcIn.transferTo(audioStart + (noOfChunks * MAXIMUM_WRITABLE_CHUNK_SIZE), lastChunkSize, fcOut);
-                Logger.trace("Written padding:" + written + " Data:" + written2);
+                logger.finer("Written padding:" + written + " Data:" + written2);
                 if (written2 != audiolength)
                 {
                     throw new RuntimeException(ErrorMessage.MP3_UNABLE_TO_ADJUST_PADDING.getMsg(audiolength, written2));
@@ -1498,7 +1497,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
             }
             catch (Exception e)
             {
-                Logger.warn("{}","Problem closing channels and locks:" + e.getMessage(), e);
+                logger.log(Level.WARNING, "Problem closing channels and locks:" + e.getMessage(), e);
             }
         }
     }
@@ -1516,10 +1515,10 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
         if (paddingSize == audioStart)
         {
             // nothing to do
-            Logger.trace("padding not required. nothing to do.");
+            logger.finest("padding not required. nothing to do.");
             return;
         }
-        Logger.trace("Adjusting padding in place.");
+        logger.finer("Adjusting padding in place.");
         // we cannot use channels because of bugs in the macOS implementation
         // when moving data within the same file
         RandomAccessFile randomAccessFile = null;
@@ -1598,7 +1597,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
             }
             catch (Exception e)
             {
-                Logger.warn("{}","Problem closing random access file:" + e.getMessage(), e);
+                logger.log(Level.WARNING, "Problem closing random access file:" + e.getMessage(), e);
             }
         }
     }
@@ -1622,7 +1621,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
         //We need to adjust location of audio file if true
         if (sizeIncPadding > audioStartLocation)
         {
-            Logger.trace("Adjusting Padding");
+            logger.finest("Adjusting Padding");
             adjustPadding(file, sizeIncPadding, audioStartLocation);
         }
 
@@ -1636,29 +1635,29 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
         }
         catch (FileNotFoundException fe)
         {
-            Logger.error("{}",getLoggingFilename() + fe.getMessage(), fe);
+            logger.log(Level.SEVERE, getLoggingFilename() + fe.getMessage(), fe);
             if (fe.getMessage().contains(FileSystemMessage.ACCESS_IS_DENIED.getMsg()) || fe.getMessage().contains(FileSystemMessage.PERMISSION_DENIED.getMsg()))
             {
-                Logger.error(ErrorMessage.GENERAL_WRITE_FAILED_TO_OPEN_FILE_FOR_EDITING.getMsg(file.getPath()));
+                logger.severe(ErrorMessage.GENERAL_WRITE_FAILED_TO_OPEN_FILE_FOR_EDITING.getMsg(file.getPath()));
                 throw new UnableToModifyFileException(ErrorMessage.GENERAL_WRITE_FAILED_TO_OPEN_FILE_FOR_EDITING.getMsg(file.getPath()));
             }
             else
             {
-                Logger.error(ErrorMessage.GENERAL_WRITE_FAILED_TO_OPEN_FILE_FOR_EDITING.getMsg(file.getPath()));
+                logger.severe(ErrorMessage.GENERAL_WRITE_FAILED_TO_OPEN_FILE_FOR_EDITING.getMsg(file.getPath()));
                 throw new UnableToCreateFileException(ErrorMessage.GENERAL_WRITE_FAILED_TO_OPEN_FILE_FOR_EDITING.getMsg(file.getPath()));
             }
         }
         catch (IOException ioe)
         {
-            Logger.error("{}",getLoggingFilename() + ioe.getMessage(), ioe);
+            logger.log(Level.SEVERE, getLoggingFilename() + ioe.getMessage(), ioe);
             if (ioe.getMessage().equals(FileSystemMessage.ACCESS_IS_DENIED.getMsg()))
             {
-                Logger.error(ErrorMessage.GENERAL_WRITE_FAILED_TO_OPEN_FILE_FOR_EDITING.getMsg(file.getParentFile().getPath()));
+                logger.severe(ErrorMessage.GENERAL_WRITE_FAILED_TO_OPEN_FILE_FOR_EDITING.getMsg(file.getParentFile().getPath()));
                 throw new UnableToModifyFileException(ErrorMessage.GENERAL_WRITE_FAILED_TO_OPEN_FILE_FOR_EDITING.getMsg(file.getParentFile().getPath()));
             }
             else
             {
-                Logger.error(ErrorMessage.GENERAL_WRITE_FAILED_TO_OPEN_FILE_FOR_EDITING.getMsg(file.getParentFile().getPath()));
+                logger.severe(ErrorMessage.GENERAL_WRITE_FAILED_TO_OPEN_FILE_FOR_EDITING.getMsg(file.getParentFile().getPath()));
                 throw new UnableToCreateFileException(ErrorMessage.GENERAL_WRITE_FAILED_TO_OPEN_FILE_FOR_EDITING.getMsg(file.getParentFile().getPath()));
             }
         }
@@ -1700,7 +1699,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
         renameOriginalResult = originalFile.renameTo(originalFileBackup);
         if (!renameOriginalResult)
         {
-            Logger.warn(ErrorMessage.GENERAL_WRITE_FAILED_TO_RENAME_ORIGINAL_FILE_TO_BACKUP.getMsg(originalFile.getAbsolutePath(), originalFileBackup.getName()));
+            logger.warning(ErrorMessage.GENERAL_WRITE_FAILED_TO_RENAME_ORIGINAL_FILE_TO_BACKUP.getMsg(originalFile.getAbsolutePath(), originalFileBackup.getName()));
             newFile.delete();
             throw new UnableToRenameFileException(ErrorMessage.GENERAL_WRITE_FAILED_TO_RENAME_ORIGINAL_FILE_TO_BACKUP.getMsg(originalFile.getAbsolutePath(), originalFileBackup.getName()));
         }
@@ -1713,7 +1712,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
             //New File doesnt exist
             if (!newFile.exists())
             {
-                Logger.warn(ErrorMessage.GENERAL_WRITE_FAILED_NEW_FILE_DOESNT_EXIST.getMsg(newFile.getAbsolutePath()));
+                logger.warning(ErrorMessage.GENERAL_WRITE_FAILED_NEW_FILE_DOESNT_EXIST.getMsg(newFile.getAbsolutePath()));
             }
 
             //Rename the backup back to the original
@@ -1721,11 +1720,11 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
             if (!renameOriginalResult)
             {
                 //TODO now if this happens we are left with testfile.old instead of testfile.mp3
-                Logger.warn(ErrorMessage.GENERAL_WRITE_FAILED_TO_RENAME_ORIGINAL_BACKUP_TO_ORIGINAL.getMsg(originalFileBackup.getAbsolutePath(), originalFile.getName()));
+                logger.warning(ErrorMessage.GENERAL_WRITE_FAILED_TO_RENAME_ORIGINAL_BACKUP_TO_ORIGINAL.getMsg(originalFileBackup.getAbsolutePath(), originalFile.getName()));
             }
 
 
-            Logger.warn(ErrorMessage.GENERAL_WRITE_FAILED_TO_RENAME_TO_ORIGINAL_FILE.getMsg(originalFile.getAbsolutePath(), newFile.getName()));
+            logger.warning(ErrorMessage.GENERAL_WRITE_FAILED_TO_RENAME_TO_ORIGINAL_FILE.getMsg(originalFile.getAbsolutePath(), newFile.getName()));
             newFile.delete();
             throw new UnableToRenameFileException(ErrorMessage.GENERAL_WRITE_FAILED_TO_RENAME_TO_ORIGINAL_FILE.getMsg(originalFile.getAbsolutePath(), newFile.getName()));
         }
@@ -1736,7 +1735,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
             if (!deleteResult)
             {
                 //Not a disaster but can't deleteField the backup so make a warning
-                Logger.warn(ErrorMessage.GENERAL_WRITE_WARNING_UNABLE_TO_DELETE_BACKUP_FILE.getMsg(originalFileBackup.getAbsolutePath()));
+                logger.warning(ErrorMessage.GENERAL_WRITE_WARNING_UNABLE_TO_DELETE_BACKUP_FILE.getMsg(originalFileBackup.getAbsolutePath()));
             }
         }
     }
@@ -1774,7 +1773,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
             }
             else if (o instanceof AggregatedFrame)
             {
-                Logger.error("Duplicated Aggregate Frame, ignoring:" + id);
+                logger.severe("Duplicated Aggregate Frame, ignoring:" + id);
             }
             else if (o instanceof List)
             {
@@ -1783,7 +1782,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
             }
             else
             {
-                Logger.error("Unknown frame class:discarding:" + o.getClass());
+                logger.severe("Unknown frame class:discarding:" + o.getClass());
             }
         }
         else
@@ -1835,7 +1834,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
                 {
                     ArrayList<AbstractID3v2Frame> multiValues = (ArrayList<AbstractID3v2Frame>) o;
                     multiValues.add(next);
-                    Logger.trace("Adding Multi Frame(1)" + frameId);
+                    logger.finer("Adding Multi Frame(1)" + frameId);
                 }
                 else
                 {
@@ -1843,19 +1842,19 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
                     multiValues.add((AbstractID3v2Frame) o);
                     multiValues.add(next);
                     map.put(frameId, multiValues);
-                    Logger.trace("Adding Multi Frame(2)" + frameId);
+                    logger.finer("Adding Multi Frame(2)" + frameId);
                 }
             }
             else
             {
-                Logger.trace("Adding Multi FrameList(3)" + frameId);
+                logger.finer("Adding Multi FrameList(3)" + frameId);
                 map.put(frameId, next);
             }
         }
         //If duplicate frame just stores the name of the frame and the number of bytes the frame contains
         else if (map.containsKey(frameId))
         {
-            Logger.warn("Ignoring Duplicate Frame:" + frameId);
+            logger.warning("Ignoring Duplicate Frame:" + frameId);
             //If we have multiple duplicate frames in a tag separate them with semicolons
             if (this.duplicateFrameId.length() > 0)
             {
@@ -1866,7 +1865,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
         }
         else
         {
-            Logger.trace("Adding Frame" + frameId);
+            logger.finer("Adding Frame" + frameId);
             map.put(frameId, next);
         }
     }
@@ -2128,7 +2127,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
         }
         catch (KeyNotFoundException knfe)
         {
-            Logger.error("{}",knfe.getMessage(), knfe);
+            logger.log(Level.SEVERE, knfe.getMessage(), knfe);
             return false;
         }
     }
@@ -2641,7 +2640,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
                 }
                 else
                 {
-                    Logger.error(getLoggingFilename() + ":Need to implement getFields(FieldKey genericKey) for:" + formatKey + next.getClass());
+                    logger.severe(getLoggingFilename() + ":Need to implement getFields(FieldKey genericKey) for:" + formatKey + next.getClass());
                 }
             }
         }
@@ -3085,7 +3084,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
                 }
                 else
                 {
-                    Logger.error("Need to implement getFields(FieldKey genericKey) for:" + formatKey + next.getClass());
+                    logger.severe("Need to implement getFields(FieldKey genericKey) for:" + formatKey + next.getClass());
                 }
             }
             return filteredList;

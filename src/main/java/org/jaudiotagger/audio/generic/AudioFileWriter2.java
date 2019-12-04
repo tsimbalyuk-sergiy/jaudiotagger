@@ -6,7 +6,6 @@ import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagOptionSingleton;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -33,7 +32,7 @@ public abstract class AudioFileWriter2 extends AudioFileWriter
 
         if (TagOptionSingleton.getInstance().isCheckIsWritable() && !Files.isWritable(file))
         {
-            Logger.error(Permissions.displayPermissions(file));
+            logger.severe(Permissions.displayPermissions(file));
             throw new CannotWriteException(ErrorMessage.GENERAL_DELETE_FAILED
                     .getMsg(file));
         }
@@ -59,8 +58,8 @@ public abstract class AudioFileWriter2 extends AudioFileWriter
 
         if (TagOptionSingleton.getInstance().isCheckIsWritable() && !Files.isWritable(file))
         {
-            Logger.error(Permissions.displayPermissions(file));
-            Logger.error(ErrorMessage.GENERAL_WRITE_FAILED.getMsg(af.getFile()
+            logger.severe(Permissions.displayPermissions(file));
+            logger.severe(ErrorMessage.GENERAL_WRITE_FAILED.getMsg(af.getFile()
                     .getPath()));
             throw new CannotWriteException(ErrorMessage.GENERAL_WRITE_FAILED_TO_OPEN_FILE_FOR_EDITING
                     .getMsg(file));

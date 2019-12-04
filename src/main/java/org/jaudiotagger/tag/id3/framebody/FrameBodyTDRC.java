@@ -28,7 +28,6 @@ import org.jaudiotagger.tag.datatype.DataTypes;
 import org.jaudiotagger.tag.id3.ID3v23Frames;
 import org.jaudiotagger.tag.id3.ID3v24Frames;
 import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
-import org.tinylog.Logger;
 
 import java.nio.ByteBuffer;
 import java.text.ParseException;
@@ -37,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
 
 
 public class FrameBodyTDRC extends AbstractFrameBodyTextInfo implements ID3v24FrameBody
@@ -138,7 +138,7 @@ public class FrameBodyTDRC extends AbstractFrameBodyTextInfo implements ID3v24Fr
         }
         catch (ParseException e)
         {
-            Logger.warn("Unable to parse:" + text);
+            logger.warning("Unable to parse:" + text);
         }
         return "";
     }
@@ -185,20 +185,20 @@ public class FrameBodyTDRC extends AbstractFrameBodyTextInfo implements ID3v24Fr
 
     public void setYear(String year)
     {
-        Logger.trace("Setting year to" + year);
+        logger.finest("Setting year to" + year);
         this.year = year;
     }
 
     public void setTime(String time)
     {
-        Logger.trace("Setting time to:" + time);
+        logger.finest("Setting time to:" + time);
         this.time = time;
     }
 
 
     public void setDate(String date)
     {
-        Logger.trace("Setting date to:" + date);
+        logger.finest("Setting date to:" + date);
         this.date = date;
     }
 
@@ -320,7 +320,7 @@ public class FrameBodyTDRC extends AbstractFrameBodyTextInfo implements ID3v24Fr
             catch(NumberFormatException nfe)
             {
                 //Do nothing except log warning because not really expecting this to happen
-                Logger.warn("{}","Date Formatter:"+formatters.get(i).toPattern() + "failed to parse:"+getText()+ "with "+nfe.getMessage(),nfe);
+                logger.log(Level.WARNING,"Date Formatter:"+formatters.get(i).toPattern() + "failed to parse:"+getText()+ "with "+nfe.getMessage(),nfe);
             }
         }
     }
@@ -374,7 +374,7 @@ public class FrameBodyTDRC extends AbstractFrameBodyTextInfo implements ID3v24Fr
     //first day
     private void extractID3v23Formats(final Date dateRecord, final int precision)
     {
-        Logger.trace("{}","Precision is:"+precision+"for date:"+dateRecord.toString());
+        logger.fine("Precision is:"+precision+"for date:"+dateRecord.toString());
         Date d = dateRecord;
 
         //Precision Year

@@ -5,7 +5,6 @@ import org.jaudiotagger.audio.iff.Chunk;
 import org.jaudiotagger.audio.iff.ChunkHeader;
 import org.jaudiotagger.audio.iff.IffHeaderChunk;
 import org.jaudiotagger.logging.Hex;
-import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +13,7 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.logging.Logger;
 
 /**
  * Experimental, reads the length of data chiunk and removes all data after that, useful for removing screwed up tags at end of file, but
@@ -22,7 +22,7 @@ import java.nio.file.StandardOpenOption;
 public class WavCleaner
 {
     // Logger Object
-//    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.wav");
+    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.wav");
 
     private Path path;
     private String loggingName;
@@ -88,7 +88,7 @@ public class WavCleaner
         }
 
         String id = chunkHeader.getID();
-        Logger.trace(loggingName + " Reading Chunk:" + id
+        logger.config(loggingName + " Reading Chunk:" + id
                 + ":starting at:" +Hex.asDecAndHex(chunkHeader.getStartLocationInFile())
                 + ":sizeIncHeader:" + (chunkHeader.getSize() + ChunkHeader.CHUNK_HEADER_SIZE));
         final WavChunkType chunkType = WavChunkType.get(id);
@@ -107,7 +107,7 @@ public class WavCleaner
 
                 //Dont need to do anything with these just skip
                 default:
-                    Logger.trace(loggingName + " Skipping chunk bytes:" + chunkHeader.getSize());
+                    logger.config(loggingName + " Skipping chunk bytes:" + chunkHeader.getSize());
                     fc.position(fc.position() + chunkHeader.getSize());
             }
         }
@@ -118,10 +118,10 @@ public class WavCleaner
             {
                 String msg = loggingName + " Not a valid header, unable to read a sensible size:Header"
                         + chunkHeader.getID()+"Size:"+chunkHeader.getSize();
-                Logger.error(msg);
+                logger.severe(msg);
                 throw new CannotReadException(msg);
             }
-            Logger.error(loggingName + " Skipping chunk bytes:" + chunkHeader.getSize() + " for" + chunkHeader.getID());
+            logger.severe(loggingName + " Skipping chunk bytes:" + chunkHeader.getSize() + " for" + chunkHeader.getID());
             fc.position(fc.position() + chunkHeader.getSize());
         }
         IffHeaderChunk.ensureOnEqualBoundary(fc, chunkHeader);

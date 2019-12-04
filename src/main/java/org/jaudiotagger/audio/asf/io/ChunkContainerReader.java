@@ -4,7 +4,6 @@ import org.jaudiotagger.audio.asf.data.Chunk;
 import org.jaudiotagger.audio.asf.data.ChunkContainer;
 import org.jaudiotagger.audio.asf.data.GUID;
 import org.jaudiotagger.audio.asf.util.Utils;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * This class represents a reader implementation, which is able to read ASF
@@ -29,7 +29,7 @@ abstract class ChunkContainerReader<ChunkType extends ChunkContainer> implements
     /**
      * Logger
      */
-//    protected static final Logger LOGGER = Logger.getLogger("org.jaudiotabgger.audio"); //$NON-NLS-1$
+    protected static final Logger LOGGER = Logger.getLogger("org.jaudiotabgger.audio"); //$NON-NLS-1$
 
     /**
      * Within this range, a {@link ChunkReader} should be aware if it fails.
@@ -224,11 +224,11 @@ abstract class ChunkContainerReader<ChunkType extends ChunkContainer> implements
         }
         catch (InstantiationException e)
         {
-            Logger.error(e.getMessage());
+            LOGGER.severe(e.getMessage());
         }
         catch (IllegalAccessException e)
         {
-            Logger.error(e.getMessage());
+            LOGGER.severe(e.getMessage());
         }
     }
 

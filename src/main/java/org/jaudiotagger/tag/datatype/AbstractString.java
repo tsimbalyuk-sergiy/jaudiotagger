@@ -25,7 +25,6 @@ package org.jaudiotagger.tag.datatype;
 
 import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
 import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
-import org.tinylog.Logger;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -122,7 +121,7 @@ public abstract class AbstractString extends AbstractDataType
         }
         else
         {
-            Logger.trace("Failed Trying to decode" + value + "with" + encoder.toString());
+            logger.finest("Failed Trying to decode" + value + "with" + encoder.toString());
             return false;
         }
     }
@@ -186,7 +185,7 @@ public abstract class AbstractString extends AbstractDataType
     {
         final byte textEncoding = this.getBody().getTextEncoding();
         final Charset charSetName = TextEncoding.getInstanceOf().getCharsetForId(textEncoding);
-        Logger.trace("text encoding:" + textEncoding + " charset:" + charSetName.name());
+        logger.finest("text encoding:" + textEncoding + " charset:" + charSetName.name());
         return charSetName;
     }
 }

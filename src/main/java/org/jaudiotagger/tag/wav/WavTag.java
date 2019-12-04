@@ -35,12 +35,13 @@ import org.jaudiotagger.tag.id3.ID3v24Tag;
 import org.jaudiotagger.tag.id3.Id3SupportingTag;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.reference.ID3V2Version;
-import org.tinylog.Logger;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represent wav metadata found in a Wav file
@@ -51,7 +52,7 @@ import java.util.List;
  */
 public class WavTag implements Tag, Id3SupportingTag
 {
-//    private static final Logger logger = Logger.getLogger(WavTag.class.getPackage().getName());
+    private static final Logger logger = Logger.getLogger(WavTag.class.getPackage().getName());
     
     private static final String NULL = "\0";
 
@@ -527,7 +528,7 @@ public class WavTag implements Tag, Id3SupportingTag
         }
         catch(FieldDataInvalidException deie)
         {
-        	Logger.info("{}","Couldn't sync to ID3 because the data to sync was invalid", deie);
+        	logger.log(Level.INFO, "Couldn't sync to ID3 because the data to sync was invalid", deie);
         }
     }
 
@@ -552,7 +553,7 @@ public class WavTag implements Tag, Id3SupportingTag
         }
         catch(FieldDataInvalidException deie)
         {
-        	Logger.info("{}","Couldn't sync to INFO because the data to sync was invalid", deie);
+        	logger.log(Level.INFO, "Couldn't sync to INFO because the data to sync was invalid", deie);
         }
     }
 
@@ -578,7 +579,7 @@ public class WavTag implements Tag, Id3SupportingTag
         }
         catch(FieldDataInvalidException deie)
         {
-        	Logger.info("{}","Couldn't sync to ID3 because the data to sync was invalid", deie);
+        	logger.log(Level.INFO, "Couldn't sync to ID3 because the data to sync was invalid", deie);
         }
     }
 
@@ -604,7 +605,7 @@ public class WavTag implements Tag, Id3SupportingTag
         }
         catch(FieldDataInvalidException deie)
         {
-        	Logger.info("{}","Couldn't sync to INFO because the data to sync was invalid", deie);
+        	logger.log(Level.INFO, "Couldn't sync to INFO because the data to sync was invalid", deie);
         }
     }
 

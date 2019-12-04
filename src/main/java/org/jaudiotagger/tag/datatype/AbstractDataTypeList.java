@@ -18,7 +18,6 @@ package org.jaudiotagger.tag.datatype;
 
 import org.jaudiotagger.tag.InvalidDataTypeException;
 import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +124,7 @@ public abstract class AbstractDataTypeList<T extends AbstractDataType> extends A
      */
     public byte[] writeByteArray()
     {
-        Logger.trace("Writing DataTypeList " + this.getIdentifier());
+        logger.config("Writing DataTypeList " + this.getIdentifier());
         final byte[] buffer = new byte[getSize()];
         int offset = 0;
         for (final AbstractDataType data : getValue()) {

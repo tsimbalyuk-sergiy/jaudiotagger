@@ -6,7 +6,6 @@ import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
 import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 import org.jaudiotagger.tag.options.PadNumberOption;
 import org.jaudiotagger.utils.EqualsUtil;
-import org.tinylog.Logger;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -92,7 +91,7 @@ public class PartOfSet extends AbstractString
      */
     public void readByteArray(byte[] arr, int offset) throws InvalidDataTypeException
     {
-        Logger.trace("Reading from array from offset:" + offset);
+        logger.finest("Reading from array from offset:" + offset);
 
         //Get the Specified Decoder
         CharsetDecoder decoder = getTextEncodingCharSet().newDecoder();
@@ -104,7 +103,7 @@ public class PartOfSet extends AbstractString
         CoderResult coderResult = decoder.decode(inBuffer, outBuffer, true);
         if (coderResult.isError())
         {
-            Logger.warn("Decoding error:" + coderResult.toString());
+            logger.warning("Decoding error:" + coderResult.toString());
         }
         decoder.flush(outBuffer);
         outBuffer.flip();
@@ -115,7 +114,7 @@ public class PartOfSet extends AbstractString
 
         //SetSize, important this is correct for finding the next datatype
         setSize(arr.length - offset);
-        Logger.trace("Read SizeTerminatedString:" + value + " size:" + size);
+        logger.config("Read SizeTerminatedString:" + value + " size:" + size);
     }
 
     /**
@@ -169,7 +168,7 @@ public class PartOfSet extends AbstractString
         //Should never happen so if does throw a RuntimeException
         catch (CharacterCodingException ce)
         {
-            Logger.error(ce.getMessage());
+            logger.severe(ce.getMessage());
             throw new RuntimeException(ce);
         }
         setSize(data.length);
@@ -187,7 +186,7 @@ public class PartOfSet extends AbstractString
     {
         final byte textEncoding = this.getBody().getTextEncoding();
         final Charset charset = TextEncoding.getInstanceOf().getCharsetForId(textEncoding);
-        Logger.trace("text encoding:" + textEncoding + " charset:" + charset.name());
+        logger.finest("text encoding:" + textEncoding + " charset:" + charset.name());
         return charset;
     }
 

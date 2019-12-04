@@ -16,7 +16,6 @@ package org.jaudiotagger.tag.datatype;
 import org.jaudiotagger.tag.InvalidDataTypeException;
 import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
 import org.jaudiotagger.tag.id3.valuepair.EventTimingTypes;
-import org.tinylog.Logger;
 
 /**
  * A single synchronized tempo code. Part of a list of temnpo codes ({@link org.jaudiotagger.tag.datatype.SynchronisedTempoCodeList}), that are contained in
@@ -91,13 +90,13 @@ public class SynchronisedTempoCode extends AbstractDataType implements Cloneable
         int localOffset = originalOffset;
         int size = getSize();
 
-        Logger.trace("offset:" + localOffset);
+        logger.finest("offset:" + localOffset);
 
         //The read has extended further than the defined frame size (ok to extend upto
         //size because the next datatype may be of length 0.)
         if (originalOffset > buffer.length-size)
         {
-            Logger.warn("Invalid size for FrameBody");
+            logger.warning("Invalid size for FrameBody");
             throw new InvalidDataTypeException("Invalid size for FrameBody");
         }
 

@@ -22,7 +22,6 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.generic.Utils;
 import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.id3.AbstractID3v2Tag;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -30,6 +29,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -43,7 +44,7 @@ import java.util.List;
 public class OggPageHeader
 {
     // Logger Object
-//    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.ogg.atom");
+    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.ogg.atom");
 
     //Capture pattern at start of header
     public static final byte[] CAPTURE_PATTERN = {'O', 'g', 'g', 'S'};
@@ -114,7 +115,7 @@ public class OggPageHeader
        {
            //byteBuffer
            int start = byteBuffer.position();
-           Logger.trace("{}","Trying to read OggPage at:" + start);
+           logger.fine("Trying to read OggPage at:" + start);
 
            byte[] b = new byte[OggPageHeader.CAPTURE_PATTERN.length];
            byteBuffer.get(b);
@@ -145,7 +146,7 @@ public class OggPageHeader
     public static OggPageHeader read(RandomAccessFile raf) throws IOException, CannotReadException
     {
         long start = raf.getFilePointer();
-        Logger.trace("{}","Trying to read OggPage at:" + start);
+        logger.fine("Trying to read OggPage at:" + start);
 
         byte[] b = new byte[OggPageHeader.CAPTURE_PATTERN.length];
         raf.read(b);
@@ -154,7 +155,7 @@ public class OggPageHeader
             raf.seek(start);
             if(AbstractID3v2Tag.isId3Tag(raf))
             {
-                Logger.warn(ErrorMessage.OGG_CONTAINS_ID3TAG.getMsg(raf.getFilePointer() - start));
+                logger.warning(ErrorMessage.OGG_CONTAINS_ID3TAG.getMsg(raf.getFilePointer() - start));
                 raf.read(b);
                 if ((Arrays.equals(b, OggPageHeader.CAPTURE_PATTERN)))
                 {
@@ -230,10 +231,10 @@ public class OggPageHeader
             isValid = true;
         }
 
-//        if(logger.isLoggable(Level.CONFIG))
-//        {
-            Logger.trace("Constructed OggPage:" + this.toString());
-//        }
+        if(logger.isLoggable(Level.CONFIG))
+        {
+            logger.config("Constructed OggPage:" + this.toString());
+        }
     }
 
     private int u(int i)
@@ -251,7 +252,7 @@ public class OggPageHeader
 
     public double getAbsoluteGranulePosition()
     {
-        Logger.trace("{}","Number Of Samples: " + absoluteGranulePosition);
+        logger.fine("Number Of Samples: " + absoluteGranulePosition);
         return this.absoluteGranulePosition;
     }
 
@@ -270,7 +271,7 @@ public class OggPageHeader
 
     public int getPageLength()
     {
-        Logger.trace("This page length: " + pageLength);
+        logger.finer("This page length: " + pageLength);
         return this.pageLength;
     }
 

@@ -1,11 +1,12 @@
 package org.jaudiotagger.tag.id3;
 
 import org.jaudiotagger.audio.mp3.MPEGFrameHeader;
-import org.tinylog.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Performs unsynchronization and synchronization tasks on a buffer.
@@ -15,7 +16,7 @@ import java.nio.ByteBuffer;
 public class ID3Unsynchronization
 {
     //Logger
-////    public static Logger logger = Logger.getLogger("org.jaudiotagger.tag.id3");
+    public static Logger logger = Logger.getLogger("org.jaudiotagger.tag.id3");
 
 
     /**
@@ -31,10 +32,10 @@ public class ID3Unsynchronization
         {
             if (((abySource[i] & MPEGFrameHeader.SYNC_BYTE1) == MPEGFrameHeader.SYNC_BYTE1) && ((abySource[i + 1] & MPEGFrameHeader.SYNC_BYTE2) == MPEGFrameHeader.SYNC_BYTE2))
             {
-//                if (logger.isLoggable(Level.FINEST))
-//                {
-                    Logger.trace("Unsynchronisation required found bit at:" + i);
-//                }
+                if (logger.isLoggable(Level.FINEST))
+                {
+                    logger.finest("Unsynchronisation required found bit at:" + i);
+                }
                 return true;
             }
         }
@@ -75,20 +76,20 @@ public class ID3Unsynchronization
                     if ((secondByte & MPEGFrameHeader.SYNC_BYTE2) == MPEGFrameHeader.SYNC_BYTE2)
                     {
                         // we need to unsynchronize here
-//                        if (logger.isLoggable(Level.FINEST))
-//                        {
-                            Logger.trace("Writing unsynchronisation bit at:" + count);
-//                        }
+                        if (logger.isLoggable(Level.FINEST))
+                        {
+                            logger.finest("Writing unsynchronisation bit at:" + count);
+                        }
                         output.write(0);
 
                     }
                     else if (secondByte == 0)
                     {
                         // we need to unsynchronize here
-//                        if (logger.isLoggable(Level.FINEST))
-//                        {
-                            Logger.trace("Inserting zero unsynchronisation bit at:" + count);
-//                        }
+                        if (logger.isLoggable(Level.FINEST))
+                        {
+                            logger.finest("Inserting zero unsynchronisation bit at:" + count);
+                        }
                         output.write(0);
                     }
                     input.reset();
@@ -99,7 +100,7 @@ public class ID3Unsynchronization
         // which will be removed on de-unsynchronization later
         if ((abySource[abySource.length - 1] & MPEGFrameHeader.SYNC_BYTE1) == MPEGFrameHeader.SYNC_BYTE1)
         {
-            Logger.trace("Adding unsynchronisation bit at end of stream");
+            logger.finest("Adding unsynchronisation bit at end of stream");
             output.write(0);
         }
         return output.toByteArray();

@@ -34,7 +34,6 @@ import org.jaudiotagger.tag.TagNotFoundException;
 import org.jaudiotagger.tag.TagOptionSingleton;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.reference.GenreTypes;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -936,7 +935,7 @@ public class ID3v1Tag extends AbstractID3v1Tag implements Tag
         {
             throw new TagNotFoundException(getLoggingFilename() + ":" + "ID3v1 tag not found");
         }
-        Logger.trace(getLoggingFilename() + ":" + "Reading v1 tag");
+        logger.finer(getLoggingFilename() + ":" + "Reading v1 tag");
         //Do single file read of data to cut down on file reads
         byte[] dataBuffer = new byte[TAG_LENGTH];
         byteBuffer.position(0);
@@ -955,12 +954,11 @@ public class ID3v1Tag extends AbstractID3v1Tag implements Tag
         }
         album = new String(dataBuffer, FIELD_ALBUM_POS, FIELD_ALBUM_LENGTH, StandardCharsets.ISO_8859_1).trim();
         m = AbstractID3v1Tag.endofStringPattern.matcher(album);
-
-        Logger.trace(getLoggingFilename() + ":" + "Orig Album is:" + comment + ":");
+        logger.finest(getLoggingFilename() + ":" + "Orig Album is:" + comment + ":");
         if (m.find())
         {
             album = album.substring(0, m.start());
-            Logger.trace(getLoggingFilename() + ":" + "Album is:" + album + ":");
+            logger.finest(getLoggingFilename() + ":" + "Album is:" + album + ":");
         }
         year = new String(dataBuffer, FIELD_YEAR_POS, FIELD_YEAR_LENGTH, StandardCharsets.ISO_8859_1).trim();
         m = AbstractID3v1Tag.endofStringPattern.matcher(year);
@@ -970,11 +968,11 @@ public class ID3v1Tag extends AbstractID3v1Tag implements Tag
         }
         comment = new String(dataBuffer, FIELD_COMMENT_POS, FIELD_COMMENT_LENGTH, StandardCharsets.ISO_8859_1).trim();
         m = AbstractID3v1Tag.endofStringPattern.matcher(comment);
-        Logger.trace(getLoggingFilename() + ":" + "Orig Comment is:" + comment + ":");
+        logger.finest(getLoggingFilename() + ":" + "Orig Comment is:" + comment + ":");
         if (m.find())
         {
             comment = comment.substring(0, m.start());
-            Logger.trace(getLoggingFilename() + ":" + "Comment is:" + comment + ":");
+            logger.finest(getLoggingFilename() + ":" + "Comment is:" + comment + ":");
         }
         genre = dataBuffer[FIELD_GENRE_POS];
 
@@ -1001,7 +999,7 @@ public class ID3v1Tag extends AbstractID3v1Tag implements Tag
      */
     public void write(RandomAccessFile file) throws IOException
     {
-        Logger.trace("Saving ID3v1 tag to file");
+        logger.config("Saving ID3v1 tag to file");
         byte[] buffer = new byte[TAG_LENGTH];
         int i;
         String str;
@@ -1060,7 +1058,7 @@ public class ID3v1Tag extends AbstractID3v1Tag implements Tag
             buffer[offset] = genre;
         }
         file.write(buffer);
-        Logger.trace("Saved ID3v1 tag to file");
+        logger.config("Saved ID3v1 tag to file");
     }
 
     /**

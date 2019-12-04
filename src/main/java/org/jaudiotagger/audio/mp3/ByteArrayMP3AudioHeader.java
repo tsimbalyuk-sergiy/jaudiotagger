@@ -1,7 +1,6 @@
 package org.jaudiotagger.audio.mp3;
 
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.tinylog.Logger;
 
 import java.nio.ByteBuffer;
 
@@ -92,12 +91,12 @@ public class ByteArrayMP3AudioHeader extends MP3AudioHeader
             try
             {
                 MPEGFrameHeader.parseMPEGHeader(bb);
-                Logger.trace("Check next frame confirms is an audio header ");
+                MP3AudioHeader.logger.finer("Check next frame confirms is an audio header ");
                 result = true;
             }
             catch (InvalidAudioFrameException ex)
             {
-                Logger.trace("Check next frame has identified this is not an audio header");
+                MP3AudioHeader.logger.finer("Check next frame has identified this is not an audio header");
                 result = false;
             }
         }

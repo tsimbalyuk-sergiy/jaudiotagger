@@ -4,11 +4,11 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.generic.Utils;
 import org.jaudiotagger.audio.iff.ChunkHeader;
 import org.jaudiotagger.logging.Hex;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.logging.Logger;
 
 import static java.nio.ByteOrder.BIG_ENDIAN;
 import static org.jaudiotagger.audio.aiff.AiffType.AIFC;
@@ -29,7 +29,7 @@ import static org.jaudiotagger.audio.iff.IffHeaderChunk.FORM_HEADER_LENGTH;
 public class AiffFileHeader
 {
     private static final String FORM = "FORM";
-//    private static Logger logger = Logger.getLogger("org.jaudiotagger.audio.aiff.AudioFileHeader");
+    private static Logger logger = Logger.getLogger("org.jaudiotagger.audio.aiff.AudioFileHeader");
 
     private String loggingName;
 
@@ -63,7 +63,7 @@ public class AiffFileHeader
         {
             // read chunk size
             final long chunkSize  = headerData.getInt();
-            Logger.trace(loggingName + ":Reading AIFF header size:" + Hex.asDecAndHex(chunkSize)
+            logger.config(loggingName + ":Reading AIFF header size:" + Hex.asDecAndHex(chunkSize)
                     +":File Size Should End At:"+ Hex.asDecAndHex(chunkSize + ChunkHeader.CHUNK_HEADER_SIZE));
 
             readFileType(headerData, aiffAudioHeader);

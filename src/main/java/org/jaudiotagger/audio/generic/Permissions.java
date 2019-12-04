@@ -1,7 +1,5 @@
 package org.jaudiotagger.audio.generic;
 
-import org.tinylog.Logger;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,13 +8,14 @@ import java.nio.file.attribute.AclFileAttributeView;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.util.logging.Logger;
 
 /**
  * Outputs permissions to try and identify why we dont have permissions to read/write file
  */
 public class Permissions
 {
-////    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.generic");
+    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.generic");
 
     /**
      * Display Permissions
@@ -53,7 +52,7 @@ public class Permissions
         }
         catch(IOException ioe)
         {
-            Logger.error("Unable to read permissions for:"+path.toString());
+            logger.severe("Unable to read permissions for:"+path.toString());
         }
         return sb.toString();
     }

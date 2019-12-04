@@ -34,7 +34,6 @@ import org.jaudiotagger.audio.flac.metadatablock.MetadataBlockHeader;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagOptionSingleton;
 import org.jaudiotagger.tag.flac.FlacTag;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -47,6 +46,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -65,7 +66,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class FlacTagWriter
 {
     // Logger Object
-////    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.flac");
+    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.flac");
     private FlacTagCreator tc = new FlacTagCreator();
 
     /**
@@ -199,7 +200,7 @@ public class FlacTagWriter
      */
     public void write(Tag tag, Path file) throws CannotWriteException
     {
-        Logger.trace(file + " Writing tag");
+        logger.config(file + " Writing tag");
         try (FileChannel fc = FileChannel.open(file, StandardOpenOption.WRITE, StandardOpenOption.READ))
         {
             MetadataBlockInfo blockInfo = new MetadataBlockInfo();
@@ -297,28 +298,28 @@ public class FlacTagWriter
 
             //There is enough room to fit the tag without moving the audio just need to
             //adjust padding accordingly need to allow space for padding header if padding required
-            Logger.trace(file + ":Writing tag available bytes:" + availableRoom + ":needed bytes:" + neededRoom);
+            logger.config(file + ":Writing tag available bytes:" + availableRoom + ":needed bytes:" + neededRoom);
             if ((availableRoom == neededRoom) || (availableRoom > neededRoom + MetadataBlockHeader.HEADER_LENGTH))
             {
-                Logger.trace(file + ":Room to Rewrite");
+                logger.config(file + ":Room to Rewrite");
                 writeAllNonAudioData(tag, fc, blockInfo, flacStream, availableRoom - neededRoom);
             }
             //Need to move audio
             else
             {
-                Logger.trace(file + ":Audio must be shifted "+ "NewTagSize:" + newTagSize + ":AvailableRoom:" + availableRoom + ":MinimumAdditionalRoomRequired:"+(neededRoom - availableRoom));
+                logger.config(file + ":Audio must be shifted "+ "NewTagSize:" + newTagSize + ":AvailableRoom:" + availableRoom + ":MinimumAdditionalRoomRequired:"+(neededRoom - availableRoom));
                 //As we are having to move both anyway may as well put in the default padding
                 insertUsingChunks(file, tag, fc, blockInfo, flacStream, neededRoom + FlacTagCreator.DEFAULT_PADDING, availableRoom);
             }
         }
         catch (AccessDeniedException ade)
         {
-            Logger.error("{}",ade.getMessage(), ade);
+            logger.log(Level.SEVERE, ade.getMessage(), ade);
             throw new NoWritePermissionsException(file + ":" + ade.getMessage());
         }
         catch (IOException ioe)
         {
-            Logger.error("{}",ioe.getMessage(), ioe);
+            logger.log(Level.SEVERE, ioe.getMessage(), ioe);
             throw new CannotWriteException(file + ":" + ioe.getMessage());
         }
     }
@@ -332,7 +333,7 @@ public class FlacTagWriter
     public ByteBuffer addPaddingBlock(int paddingSize) throws UnsupportedEncodingException
     {
         //Padding
-        Logger.trace("padding:" + paddingSize);
+        logger.config("padding:" + paddingSize);
         ByteBuffer buf = ByteBuffer.allocate(paddingSize);
         if (paddingSize > 0)
         {
@@ -430,7 +431,7 @@ public class FlacTagWriter
 
         //Extra Space Required for larger metadata block
         int extraSpaceRequired = neededRoom - availableRoom;
-        Logger.trace(file + " Audio needs shifting:"+extraSpaceRequired);
+        logger.config(file + " Audio needs shifting:"+extraSpaceRequired);
 
         //ChunkSize must be at least as large as the extra space required to write the metadata
         int chunkSize = (int)TagOptionSingleton.getInstance().getWriteChunkSize();

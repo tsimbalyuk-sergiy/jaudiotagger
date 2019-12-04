@@ -24,12 +24,12 @@ import org.jaudiotagger.audio.flac.metadatablock.BlockType;
 import org.jaudiotagger.audio.flac.metadatablock.MetadataBlockDataStreamInfo;
 import org.jaudiotagger.audio.flac.metadatablock.MetadataBlockHeader;
 import org.jaudiotagger.audio.generic.Utils;
-import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
+import java.util.logging.Logger;
 
 /**
  * Read info from Flac file
@@ -37,13 +37,13 @@ import java.nio.file.Path;
 public class FlacInfoReader
 {
     // Logger Object
-////    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.flac");
+    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.flac");
 
 
 
     public FlacAudioHeader read(Path path) throws CannotReadException, IOException
     {
-        Logger.trace(path + ":start");
+        logger.config(path + ":start");
         try(FileChannel fc = FileChannel.open(path))
         {
             FlacStreamReader flacStream = new FlacStreamReader(fc, path.toString() + " ");
@@ -58,7 +58,7 @@ public class FlacInfoReader
             while (isLastBlock==false)
             {
                 MetadataBlockHeader mbh = MetadataBlockHeader.readHeader(fc);
-                Logger.info(path.toString() + " "  + mbh.toString());
+                logger.info(path.toString() + " "  + mbh.toString());
                 if (mbh.getBlockType() == BlockType.STREAMINFO)
                 {
                     //See #253:MetadataBlockDataStreamInfo exception when bytes length is 0
@@ -132,7 +132,7 @@ public class FlacInfoReader
             while (!isLastBlock)
             {
                 MetadataBlockHeader mbh = MetadataBlockHeader.readHeader(fc);
-                Logger.trace(f + ":Found block:" + mbh.getBlockType());
+                logger.config(f + ":Found block:" + mbh.getBlockType());
                 fc.position(fc.position() + mbh.getDataLength());
                 isLastBlock = mbh.isLastBlock();
                 count++;

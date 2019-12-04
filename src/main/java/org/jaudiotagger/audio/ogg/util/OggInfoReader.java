@@ -25,11 +25,11 @@ import org.jaudiotagger.audio.generic.GenericAudioHeader;
 import org.jaudiotagger.audio.generic.Utils;
 import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.id3.AbstractID3v2Tag;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * Read encoding info, only implemented for vorbis streams
@@ -37,13 +37,13 @@ import java.util.Arrays;
 public class OggInfoReader
 {
     // Logger Object
-//    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.ogg.atom");
+    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.ogg.atom");
 
     public GenericAudioHeader read(RandomAccessFile raf) throws CannotReadException, IOException
     {
         long start = raf.getFilePointer();
         GenericAudioHeader info = new GenericAudioHeader();
-        Logger.trace("{}","Started");
+        logger.fine("Started");
         long oldPos;
 
         //Check start of file does it have Ogg pattern

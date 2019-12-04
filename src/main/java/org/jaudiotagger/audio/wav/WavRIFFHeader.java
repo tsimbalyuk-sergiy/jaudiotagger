@@ -20,13 +20,13 @@ package org.jaudiotagger.audio.wav;
 
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.generic.Utils;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 import static org.jaudiotagger.audio.iff.IffHeaderChunk.FORM_HEADER_LENGTH;
+import static org.jaudiotagger.audio.iff.IffHeaderChunk.logger;
 
 /**
  * Processes the Wav Header
@@ -47,8 +47,11 @@ public class WavRIFFHeader
         ByteBuffer headerBuffer = Utils.readFileDataIntoBufferLE(fc, FORM_HEADER_LENGTH);
         if(Utils.readFourBytesAsChars(headerBuffer).equals(RIFF_SIGNATURE))
         {
-            Logger.trace(loggingName+":Header:File:Size:"+headerBuffer.getInt()); //Size
-            return Utils.readFourBytesAsChars(headerBuffer).equals(WAVE_SIGNATURE);
+            logger.finer(loggingName+":Header:File:Size:"+headerBuffer.getInt()); //Size
+            if(Utils.readFourBytesAsChars(headerBuffer).equals(WAVE_SIGNATURE))
+            {
+                return true;
+            }
         }
         return false;
     }
