@@ -25,6 +25,7 @@ import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.generic.Utils;
 import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.logging.Hex;
+import org.tinylog.Logger;
 
 import java.io.EOFException;
 import java.io.File;
@@ -36,8 +37,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static org.jaudiotagger.audio.generic.Utils.BITS_IN_BYTE_MULTIPLIER;
 
@@ -90,7 +89,7 @@ public class MP3AudioHeader implements AudioHeader
     private static final char   isVbrIdentifier = '~';
 
     //Logger
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.mp3");
+////    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.mp3");
 
     /**
      * After testing the average location of the first MP3Header bit was at 5000 bytes so this is
@@ -201,15 +200,15 @@ public class MP3AudioHeader implements AudioHeader
                         return false;
                     }
                 }
-                //MP3File.logger.finest("fc:"+fc.position() + "bb"+bb.position());
+                //MP3File.Logger.trace("fc:"+fc.position() + "bb"+bb.position());
                 if (MPEGFrameHeader.isMPEGFrame(bb))
                 {
                     try
                     {
-                        if (MP3AudioHeader.logger.isLoggable(Level.FINEST))
-                        {
-                            MP3AudioHeader.logger.finest("Found Possible header at:" + filePointerCount);
-                        }
+//                        if (Logger.isLoggable(Level.FINEST))
+//                        {
+                            Logger.trace("Found Possible header at:" + filePointerCount);
+//                        }
 
                         mp3FrameHeader = MPEGFrameHeader.parseMPEGHeader(bb);
                         syncFound = true;
@@ -217,10 +216,10 @@ public class MP3AudioHeader implements AudioHeader
 
                         if ((header = XingFrame.isXingFrame(bb, mp3FrameHeader)) != null)
                         {
-                            if (MP3AudioHeader.logger.isLoggable(Level.FINEST))
-                            {
-                                MP3AudioHeader.logger.finest("Found Possible XingHeader");
-                            }
+//                            if (Logger.isLoggable(Level.FINEST))
+//                            {
+                                Logger.trace("Found Possible XingHeader");
+//                            }
                             try
                             {
                                 //Parses Xing frame without modifying position of main buffer
@@ -235,10 +234,10 @@ public class MP3AudioHeader implements AudioHeader
                         }
                         else if ((header = VbriFrame.isVbriFrame(bb, mp3FrameHeader)) != null)
                         {
-                            if (MP3AudioHeader.logger.isLoggable(Level.FINEST))
-                            {
-                                MP3AudioHeader.logger.finest("Found Possible VbriHeader");
-                            }
+//                            if (Logger.isLoggable(Level.FINEST))
+//                            {
+                                Logger.trace("Found Possible VbriHeader");
+//                            }
                             try
                             {
                                 //Parses Vbri frame without modifying position of main buffer
@@ -287,12 +286,12 @@ public class MP3AudioHeader implements AudioHeader
         }
         catch (EOFException ex)
         {
-            MP3AudioHeader.logger.log(Level.WARNING, "Reached end of file without finding sync match", ex);
+            Logger.warn("{}","Reached end of file without finding sync match", ex);
             syncFound = false;
         }
         catch (IOException iox)
         {
-            MP3AudioHeader.logger.log(Level.SEVERE, "IOException occurred whilst trying to find sync", iox);
+            Logger.error("{}","IOException occurred whilst trying to find sync", iox);
             syncFound = false;
             throw iox;
         }
@@ -310,10 +309,10 @@ public class MP3AudioHeader implements AudioHeader
         }
 
         //Return to start of audio header
-        if (MP3AudioHeader.logger.isLoggable(Level.FINEST))
-        {
-            MP3AudioHeader.logger.finer("Return found matching mp3 header starting at" + filePointerCount);
-        }
+//        if (Logger.isLoggable(Level.FINEST))
+//        {
+            Logger.trace("Return found matching mp3 header starting at" + filePointerCount);
+//        }
         setFileSize(seekFile.length());
         setMp3StartByte(filePointerCount);
         setTimePerFrame();
@@ -323,7 +322,7 @@ public class MP3AudioHeader implements AudioHeader
         setEncoder();
         /*if((filePointerCount - startByte )>0)
         {
-            logger.severe(seekFile.getName()+"length:"+startByte+"Difference:"+(filePointerCount - startByte));
+            Logger.error(seekFile.getName()+"length:"+startByte+"Difference:"+(filePointerCount - startByte));
         }
         */
         return syncFound;
@@ -340,11 +339,9 @@ public class MP3AudioHeader implements AudioHeader
      * @throws java.io.IOException
      */
     private boolean isNextFrameValid(File seekFile, long filePointerCount, ByteBuffer bb, FileChannel fc) throws IOException
-    {
-        if (MP3AudioHeader.logger.isLoggable(Level.FINEST))
-        {
-            MP3AudioHeader.logger.finer("Checking next frame" + seekFile.getName() + ":fpc:" + filePointerCount + "skipping to:" + (filePointerCount + mp3FrameHeader.getFrameLength()));
-        }
+    { 
+        Logger.trace("Checking next frame" + seekFile.getName() + ":fpc:" + filePointerCount + "skipping to:" + (filePointerCount + mp3FrameHeader.getFrameLength()));
+        
         boolean result = false;
 
         int currentPosition = bb.position();
@@ -354,14 +351,14 @@ public class MP3AudioHeader implements AudioHeader
         //bad frame header
         if (mp3FrameHeader.getFrameLength() > (FILE_BUFFER_SIZE - MIN_BUFFER_REMAINING_REQUIRED))
         {
-            MP3AudioHeader.logger.finer("Frame size is too large to be a frame:" + mp3FrameHeader.getFrameLength());
+            Logger.trace("Frame size is too large to be a frame:" + mp3FrameHeader.getFrameLength());
             return false;
         }
 
         //Check for end of buffer if not enough room get some more
         if (bb.remaining() <= MIN_BUFFER_REMAINING_REQUIRED + mp3FrameHeader.getFrameLength())
         {
-            MP3AudioHeader.logger.finer("Buffer too small, need to reload, buffer size:" + bb.remaining());
+            Logger.trace("Buffer too small, need to reload, buffer size:" + bb.remaining());
             bb.clear();
             fc.position(filePointerCount);
             fc.read(bb, fc.position());
@@ -372,7 +369,7 @@ public class MP3AudioHeader implements AudioHeader
             if (bb.limit() <= MIN_BUFFER_REMAINING_REQUIRED)
             {
                 //No mp3 exists
-                MP3AudioHeader.logger.finer("Nearly at end of file, no header found:");
+                Logger.trace("Nearly at end of file, no header found:");
                 return false;
             }
 
@@ -380,7 +377,7 @@ public class MP3AudioHeader implements AudioHeader
             if (bb.limit() <= MIN_BUFFER_REMAINING_REQUIRED + mp3FrameHeader.getFrameLength())
             {
                 //No mp3 exists
-                MP3AudioHeader.logger.finer("Nearly at end of file, no room for next frame, no header found:");
+                Logger.trace("Nearly at end of file, no room for next frame, no header found:");
                 return false;
             }
         }
@@ -392,18 +389,18 @@ public class MP3AudioHeader implements AudioHeader
             try
             {
                 MPEGFrameHeader.parseMPEGHeader(bb);
-                MP3AudioHeader.logger.finer("Check next frame confirms is an audio header ");
+                Logger.trace("Check next frame confirms is an audio header ");
                 result = true;
             }
             catch (InvalidAudioFrameException ex)
             {
-                MP3AudioHeader.logger.finer("Check next frame has identified this is not an audio header");
+                Logger.trace("Check next frame has identified this is not an audio header");
                 result = false;
             }
         }
         else
         {
-            MP3AudioHeader.logger.finer("isMPEGFrame has identified this is not an audio header");
+            Logger.trace("isMPEGFrame has identified this is not an audio header");
         }
         //Set back to the start of the previous frame
         bb.position(currentPosition);
@@ -568,7 +565,7 @@ public class MP3AudioHeader implements AudioHeader
         }
         catch (ParseException pe)
         {
-            logger.warning("Unable to parse:" + getPreciseTrackLength() + " failed with ParseException:" + pe.getMessage());
+            Logger.warn("Unable to parse:" + getPreciseTrackLength() + " failed with ParseException:" + pe.getMessage());
             return "";
         }
     }

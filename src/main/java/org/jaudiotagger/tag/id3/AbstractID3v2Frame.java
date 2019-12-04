@@ -28,13 +28,13 @@ import org.jaudiotagger.tag.id3.framebody.FrameBodyEncrypted;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyUnsupported;
 import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 import org.jaudiotagger.utils.EqualsUtil;
+import org.tinylog.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.logging.Level;
 
 /**
  * This abstract class is each frame header inside a ID3v2 tag.
@@ -122,7 +122,7 @@ public abstract class AbstractID3v2Frame extends AbstractTagFrame implements Tag
     //TODO the identifier checks should be done in the relevent subclasses
     public AbstractID3v2Frame(String identifier)
     {
-        logger.config("Creating empty frame of type" + identifier);
+        Logger.trace("Creating empty frame of type" + identifier);
         this.identifier = identifier;
 
         // Use reflection to map id to frame body, which makes things much easier
@@ -134,19 +134,19 @@ public abstract class AbstractID3v2Frame extends AbstractTagFrame implements Tag
         }
         catch (ClassNotFoundException cnfe)
         {
-            logger.severe(cnfe.getMessage());
+            Logger.error(cnfe.getMessage());
             frameBody = new FrameBodyUnsupported(identifier);
         }
         //Instantiate Interface/Abstract should not happen
         catch (InstantiationException ie)
         {
-            logger.log(Level.SEVERE, "InstantiationException:" + identifier, ie);
+            Logger.error("{}","InstantiationException:" + identifier, ie);
             throw new RuntimeException(ie);
         }
         //Private Constructor shouild not happen
         catch (IllegalAccessException iae)
         {
-            logger.log(Level.SEVERE, "IllegalAccessException:" + identifier, iae);
+            Logger.error("{}","IllegalAccessException:" + identifier, iae);
             throw new RuntimeException(iae);
         }
         frameBody.setHeader(this);
@@ -159,7 +159,7 @@ public abstract class AbstractID3v2Frame extends AbstractTagFrame implements Tag
             frameBody.setTextEncoding(TagOptionSingleton.getInstance().getId3v23DefaultTextEncoding());
         }
 
-        logger.config("Created empty frame of type" + identifier);
+        Logger.trace("Created empty frame of type" + identifier);
     }
 
     /**
@@ -267,7 +267,7 @@ public abstract class AbstractID3v2Frame extends AbstractTagFrame implements Tag
     {
         //Use reflection to map id to frame body, which makes things much easier
         //to keep things up to date,although slight performance hit.
-        logger.finest("Creating framebody:start");
+        Logger.trace("Creating framebody:start");
 
         AbstractID3v2FrameBody frameBody;
         try
@@ -281,7 +281,7 @@ public abstract class AbstractID3v2Frame extends AbstractTagFrame implements Tag
         //No class defined for this frame type,use FrameUnsupported
         catch (ClassNotFoundException cex)
         {
-            logger.config(getLoggingFilename() + ":" + "Identifier not recognised:" + identifier + " using FrameBodyUnsupported");
+            Logger.trace(getLoggingFilename() + ":" + "Identifier not recognised:" + identifier + " using FrameBodyUnsupported");
             try
             {
                 frameBody = new FrameBodyUnsupported(byteBuffer, frameSize);
@@ -301,7 +301,7 @@ public abstract class AbstractID3v2Frame extends AbstractTagFrame implements Tag
         //propagate it up otherwise mark this frame as invalid
         catch (InvocationTargetException ite)
         {
-            logger.severe(getLoggingFilename() + ":" + "An error occurred within abstractID3v2FrameBody for identifier:" + identifier + ":" + ite.getCause().getMessage());
+            Logger.error(getLoggingFilename() + ":" + "An error occurred within abstractID3v2FrameBody for identifier:" + identifier + ":" + ite.getCause().getMessage());
             if (ite.getCause() instanceof Error)
             {
                 throw (Error) ite.getCause();
@@ -326,22 +326,22 @@ public abstract class AbstractID3v2Frame extends AbstractTagFrame implements Tag
         //No Such Method should not happen
         catch (NoSuchMethodException sme)
         {
-            logger.log(Level.SEVERE, getLoggingFilename() + ":" + "No such method:" + sme.getMessage(), sme);
+            Logger.error("{}",getLoggingFilename() + ":" + "No such method:" + sme.getMessage(), sme);
             throw new RuntimeException(sme.getMessage());
         }
         //Instantiate Interface/Abstract should not happen
         catch (InstantiationException ie)
         {
-            logger.log(Level.SEVERE, getLoggingFilename() + ":" + "Instantiation exception:" + ie.getMessage(), ie);
+            Logger.error("{}",getLoggingFilename() + ":" + "Instantiation exception:" + ie.getMessage(), ie);
             throw new RuntimeException(ie.getMessage());
         }
         //Private Constructor shouild not happen
         catch (IllegalAccessException iae)
         {
-            logger.log(Level.SEVERE, getLoggingFilename() + ":" + "Illegal access exception :" + iae.getMessage(), iae);
+            Logger.error("{}",getLoggingFilename() + ":" + "Illegal access exception :" + iae.getMessage(), iae);
             throw new RuntimeException(iae.getMessage());
         }
-        logger.finest(getLoggingFilename() + ":" + "Created framebody:end" + frameBody.getIdentifier());
+        Logger.trace(getLoggingFilename() + ":" + "Created framebody:end" + frameBody.getIdentifier());
         frameBody.setHeader(this);
         return frameBody;
     }
@@ -371,13 +371,13 @@ public abstract class AbstractID3v2Frame extends AbstractTagFrame implements Tag
 
         if ((getFrameHeaderSize() - getFrameIdSize()) > byteBuffer.remaining())
         {
-            logger.warning(getLoggingFilename() + ":" + "No space to find another frame:");
+            Logger.warn(getLoggingFilename() + ":" + "No space to find another frame:");
             throw new InvalidFrameException(getLoggingFilename() + ":" + "No space to find another frame");
         }
 
 
         identifier = new String(buffer);
-        logger.fine(getLoggingFilename() + ":" + "Identifier is" + identifier);
+        Logger.trace("{}",getLoggingFilename() + ":" + "Identifier is" + identifier);
         return identifier;
     }
 
@@ -416,19 +416,19 @@ public abstract class AbstractID3v2Frame extends AbstractTagFrame implements Tag
         }
         catch (ClassNotFoundException cex)
         {
-            logger.config("Identifier not recognised:" + identifier + " unable to create framebody");
+            Logger.trace("Identifier not recognised:" + identifier + " unable to create framebody");
             throw new InvalidFrameException("FrameBody" + identifier + " does not exist");
         }
         //If suitable constructor does not exist
         catch (NoSuchMethodException sme)
         {
-            logger.log(Level.SEVERE, "No such method:" + sme.getMessage(), sme);
+            Logger.error("{}","No such method:" + sme.getMessage(), sme);
             throw new InvalidFrameException("FrameBody" + identifier + " does not have a constructor that takes:" + body.getClass().getName());
         }
         catch (InvocationTargetException ite)
         {
-            logger.severe("An error occurred within abstractID3v2FrameBody");
-            logger.log(Level.SEVERE, "Invocation target exception:" + ite.getCause().getMessage(), ite.getCause());
+            Logger.error("An error occurred within abstractID3v2FrameBody");
+            Logger.error("{}","Invocation target exception:" + ite.getCause().getMessage(), ite.getCause());
             if (ite.getCause() instanceof Error)
             {
                 throw (Error) ite.getCause();
@@ -446,17 +446,17 @@ public abstract class AbstractID3v2Frame extends AbstractTagFrame implements Tag
         //Instantiate Interface/Abstract should not happen
         catch (InstantiationException ie)
         {
-            logger.log(Level.SEVERE, "Instantiation exception:" + ie.getMessage(), ie);
+            Logger.error("{}","Instantiation exception:" + ie.getMessage(), ie);
             throw new RuntimeException(ie.getMessage());
         }
         //Private Constructor shouild not happen
         catch (IllegalAccessException iae)
         {
-            logger.log(Level.SEVERE, "Illegal access exception :" + iae.getMessage(), iae);
+            Logger.error("{}","Illegal access exception :" + iae.getMessage(), iae);
             throw new RuntimeException(iae.getMessage());
         }
 
-        logger.finer("frame Body created" + frameBody.getIdentifier());
+        Logger.trace("frame Body created" + frameBody.getIdentifier());
         frameBody.setHeader(this);
         return frameBody;
     }

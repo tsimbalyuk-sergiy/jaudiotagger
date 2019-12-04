@@ -2,8 +2,7 @@ package org.jaudiotagger.tag.id3;
 
 import org.jaudiotagger.tag.TagOptionSingleton;
 import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
-
-import java.util.logging.Logger;
+import org.tinylog.Logger;
 
 /**
  * Functions to encode text according to encodingoptions and ID3 version
@@ -11,7 +10,7 @@ import java.util.logging.Logger;
 public class ID3TextEncodingConversion
 {
     //Logger
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.tag.id3");
+////    public static Logger logger = Logger.getLogger("org.jaudiotagger.tag.id3");
 
 
     /**
@@ -30,7 +29,7 @@ public class ID3TextEncodingConversion
         //Should not happen, assume v23 and provide a warning
         if (header == null)
         {
-            logger.warning("Header has not yet been set for this framebody");
+            Logger.warn("Header has not yet been set for this framebody");
 
             if (TagOptionSingleton.getInstance().isResetTextEncodingForExistingFrames())
             {
@@ -79,7 +78,7 @@ public class ID3TextEncodingConversion
     {
         if (header == null)
         {
-            logger.warning("Header has not yet been set for this framebody");
+            Logger.warn("Header has not yet been set for this framebody");
             return TextEncoding.UTF_16;
         }
         else if (header instanceof ID3v24Frame)

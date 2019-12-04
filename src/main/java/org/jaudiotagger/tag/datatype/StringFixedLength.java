@@ -26,6 +26,7 @@ package org.jaudiotagger.tag.datatype;
 import org.jaudiotagger.tag.InvalidDataTypeException;
 import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
 import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
+import org.tinylog.Logger;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -88,14 +89,14 @@ public class StringFixedLength extends AbstractString
      */
     public void readByteArray(byte[] arr, int offset) throws InvalidDataTypeException
     {
-        logger.config("Reading from array from offset:" + offset);
+        Logger.trace("Reading from array from offset:" + offset);
         try
         {
             final CharsetDecoder decoder = getTextEncodingCharSet().newDecoder();
 
             //Decode buffer if runs into problems should through exception which we
             //catch and then set value to empty string.
-            logger.finest("Array length is:" + arr.length + "offset is:" + offset + "Size is:" + size);
+            Logger.trace("Array length is:" + arr.length + "offset is:" + offset + "Size is:" + size);
 
 
             if (arr.length - offset < size)
@@ -111,10 +112,10 @@ public class StringFixedLength extends AbstractString
         }
         catch (CharacterCodingException ce)
         {
-            logger.severe(ce.getMessage());
+            Logger.error(ce.getMessage());
             value = "";
         }
-        logger.config("Read StringFixedLength:" + value);
+        Logger.trace("Read StringFixedLength:" + value);
     }
 
     /**
@@ -134,7 +135,7 @@ public class StringFixedLength extends AbstractString
         //Create with a series of empty of spaces to try and ensure integrity of field
         if (value == null)
         {
-            logger.warning("Value of StringFixedlength Field is null using default value instead");
+            Logger.warn("Value of StringFixedlength Field is null using default value instead");
             data = new byte[size];
             for (int i = 0; i < size; i++)
             {
@@ -161,7 +162,7 @@ public class StringFixedLength extends AbstractString
         }
         catch (CharacterCodingException ce)
         {
-            logger.warning("There was a problem writing the following StringFixedlength Field:" + value + ":" + ce.getMessage() + "using default value instead");
+            Logger.warn("There was a problem writing the following StringFixedlength Field:" + value + ":" + ce.getMessage() + "using default value instead");
             data = new byte[size];
             for (int i = 0; i < size; i++)
             {
@@ -184,7 +185,7 @@ public class StringFixedLength extends AbstractString
             //There is more data available than allowed for this field strip
             else if (dataBuffer.limit() > size)
             {
-                logger.warning("There was a problem writing the following StringFixedlength Field:" + value + " when converted to bytes has length of:" + dataBuffer.limit() + " but field was defined with length of:" + size + " too long so stripping extra length");
+                Logger.warn("There was a problem writing the following StringFixedlength Field:" + value + " when converted to bytes has length of:" + dataBuffer.limit() + " but field was defined with length of:" + size + " too long so stripping extra length");
                 data = new byte[size];
                 dataBuffer.get(data, 0, size);
                 return data;
@@ -192,7 +193,7 @@ public class StringFixedLength extends AbstractString
             //There is not enough data
             else
             {
-                logger.warning("There was a problem writing the following StringFixedlength Field:" + value + " when converted to bytes has length of:" + dataBuffer.limit() + " but field was defined with length of:" + size + " too short so padding with spaces to make up extra length");
+                Logger.warn("There was a problem writing the following StringFixedlength Field:" + value + " when converted to bytes has length of:" + dataBuffer.limit() + " but field was defined with length of:" + size + " too short so padding with spaces to make up extra length");
 
                 data = new byte[size];
                 dataBuffer.get(data, 0, dataBuffer.limit());
@@ -206,7 +207,7 @@ public class StringFixedLength extends AbstractString
         }
         else
         {
-            logger.warning("There was a serious problem writing the following StringFixedlength Field:" + value + ":" + "using default value instead");
+            Logger.warn("There was a serious problem writing the following StringFixedlength Field:" + value + ":" + "using default value instead");
             data = new byte[size];
             for (int i = 0; i < size; i++)
             {
@@ -223,7 +224,7 @@ public class StringFixedLength extends AbstractString
     {
         final byte textEncoding = this.getBody().getTextEncoding();
         final Charset charset = TextEncoding.getInstanceOf().getCharsetForId(textEncoding);
-        logger.finest("text encoding:" + textEncoding + " charset:" + charset.name());
+        Logger.trace("text encoding:" + textEncoding + " charset:" + charset.name());
         return charset;
     }
 }

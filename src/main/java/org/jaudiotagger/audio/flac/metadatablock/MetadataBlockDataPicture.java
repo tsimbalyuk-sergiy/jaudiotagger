@@ -5,6 +5,7 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.InvalidFrameException;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.reference.PictureTypes;
+import org.tinylog.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,8 +13,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Logger;
-
 
 /**
  * Picture Block
@@ -58,9 +57,6 @@ public class MetadataBlockDataPicture implements MetadataBlockData, TagField
     private int lengthOfPictureInBytes;
     private byte[] imageData;
 
-    // Logger Object
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.flac.MetadataBlockDataPicture");
-
     private void initFromByteBuffer(ByteBuffer rawdata) throws IOException, InvalidFrameException
     {
         //Picture Type
@@ -95,7 +91,7 @@ public class MetadataBlockDataPicture implements MetadataBlockData, TagField
         imageData = new byte[lengthOfPictureInBytes];
         rawdata.get(imageData);
 
-        logger.config("Read image:" + this.toString());
+        Logger.trace("Read image: {}", this.toString());
     }
 
     /**

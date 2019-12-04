@@ -10,6 +10,7 @@ import org.jaudiotagger.tag.mp4.Mp4TagField;
 import org.jaudiotagger.tag.mp4.atom.Mp4DataBox;
 import org.jaudiotagger.tag.mp4.atom.Mp4MeanBox;
 import org.jaudiotagger.tag.mp4.atom.Mp4NameBox;
+import org.tinylog.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -117,7 +118,7 @@ public class Mp4TagReverseDnsField extends Mp4TagField implements TagTextField
         {
             id = IDENTIFIER + ":" + issuer + ":" + descriptor;
             setContent("");
-            logger.warning(ErrorMessage.MP4_REVERSE_DNS_FIELD_HAS_NO_DATA.getMsg(id));
+            Logger.warn(ErrorMessage.MP4_REVERSE_DNS_FIELD_HAS_NO_DATA.getMsg(id));
         }
         //Usual Case
         else
@@ -212,7 +213,7 @@ public class Mp4TagReverseDnsField extends Mp4TagField implements TagTextField
     @Override
     public byte[] getRawContentDataOnly() throws UnsupportedEncodingException
     {
-        logger.fine("Getting Raw data for:" + getId());
+        Logger.trace("{}","Getting Raw data for:" + getId());
         try
         {
             //Create DataBox data

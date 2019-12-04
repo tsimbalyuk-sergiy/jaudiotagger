@@ -20,6 +20,7 @@ package org.jaudiotagger.audio.generic;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.utils.FileTypeUtil;
+import org.tinylog.Logger;
 
 import java.io.DataInput;
 import java.io.File;
@@ -30,8 +31,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.US_ASCII;
@@ -46,7 +45,7 @@ public class Utils
     public  static int BITS_IN_BYTE_MULTIPLIER = 8;
     public static int KILOBYTE_MULTIPLIER = 1000;
 
-    private static final Logger logger = Logger.getLogger("org.jaudiotagger.audio.generic.utils");
+//    private static final Logger logger = Logger.getLogger("org.jaudiotagger.audio.generic.utils");
     private static final int MAX_BASE_TEMP_FILENAME_LENGTH = 20;
 
     /**
@@ -371,11 +370,11 @@ public class Utils
      */
     public static boolean rename(final File fromFile, final File toFile)
     {
-        logger.log(Level.CONFIG,"Renaming From:"+fromFile.getAbsolutePath() + " to "+toFile.getAbsolutePath());
+        Logger.trace("{}","Renaming From:"+fromFile.getAbsolutePath() + " to "+toFile.getAbsolutePath());
 
         if(toFile.exists())
         {
-            logger.log(Level.SEVERE,"Destination File:"+toFile + " already exists");
+            Logger.error("{}","Destination File:"+toFile + " already exists");
             return false;
         }
 
@@ -391,7 +390,7 @@ public class Utils
                 boolean deleteResult=fromFile.delete();
                 if(!deleteResult)
                 {
-                    logger.log(Level.SEVERE,"Unable to delete File:"+fromFile);
+                    Logger.error("{}","Unable to delete File:"+fromFile);
                     toFile.delete();
                     return false;
                 }

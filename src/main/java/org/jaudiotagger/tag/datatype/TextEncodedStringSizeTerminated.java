@@ -3,6 +3,7 @@ package org.jaudiotagger.tag.datatype;
 import org.jaudiotagger.tag.InvalidDataTypeException;
 import org.jaudiotagger.tag.TagOptionSingleton;
 import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
+import org.tinylog.Logger;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -84,7 +85,7 @@ public class TextEncodedStringSizeTerminated extends AbstractString
      */
     public void readByteArray(byte[] arr, int offset) throws InvalidDataTypeException
     {
-        logger.finest("Reading from array from offset:" + offset);
+        Logger.trace("Reading from array from offset:" + offset);
 
 
         //Decode sliced inBuffer
@@ -108,7 +109,7 @@ public class TextEncodedStringSizeTerminated extends AbstractString
         CoderResult coderResult = decoder.decode(inBuffer, outBuffer, true);
         if (coderResult.isError())
         {
-            logger.warning("Decoding error:" + coderResult.toString());
+            Logger.warn("Decoding error:" + coderResult.toString());
         }
         decoder.flush(outBuffer);
         outBuffer.flip();
@@ -128,7 +129,7 @@ public class TextEncodedStringSizeTerminated extends AbstractString
         }
         //SetSize, important this is correct for finding the next datatype
         setSize(arr.length - offset);
-        logger.finest("Read SizeTerminatedString:" + value + " size:" + size);
+        Logger.trace("Read SizeTerminatedString:" + value + " size:" + size);
 
     }
 
@@ -338,7 +339,7 @@ public class TextEncodedStringSizeTerminated extends AbstractString
         //https://bitbucket.org/ijabz/jaudiotagger/issue/1/encoding-metadata-to-utf-16-can-fail-if
         catch (CharacterCodingException ce)
         {
-            logger.severe(ce.getMessage()+":"+charset+":"+value);
+            Logger.error(ce.getMessage()+":"+charset+":"+value);
             throw new RuntimeException(ce);
         }
         return data;

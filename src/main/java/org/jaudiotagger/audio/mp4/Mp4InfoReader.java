@@ -33,13 +33,13 @@ import org.jaudiotagger.audio.mp4.atom.Mp4MvhdBox;
 import org.jaudiotagger.audio.mp4.atom.Mp4StcoBox;
 import org.jaudiotagger.audio.mp4.atom.Mp4StsdBox;
 import org.jaudiotagger.logging.ErrorMessage;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
-import java.util.logging.Logger;
 
 /**
  * Read audio info from file.
@@ -67,7 +67,7 @@ import java.util.logging.Logger;
 public class Mp4InfoReader
 {
     // Logger Object
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.mp4.atom");
+////    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.mp4.atom");
 
     private boolean isTrackAtomVideo(Mp4FtypBox ftyp,  Mp4BoxHeader boxHeader, ByteBuffer mvhdBuffer )
             throws IOException
@@ -336,7 +336,7 @@ public class Mp4InfoReader
             info.setEncodingType(EncoderType.AAC.getDescription());
         }
 
-        logger.config(info.toString());
+        Logger.trace(info.toString());
 
         //Level 2-Searching for others "trak" within "moov", if we find any traks containing video
         //then reject it if no track if not video then we allow it because many encoders seem to contain all sorts

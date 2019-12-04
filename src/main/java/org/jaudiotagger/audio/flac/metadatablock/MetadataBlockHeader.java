@@ -24,7 +24,6 @@ import org.jaudiotagger.logging.ErrorMessage;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.logging.Logger;
 
 /**
  * Metadata Block Header
@@ -41,7 +40,7 @@ public class MetadataBlockHeader
     private byte[]      bytes;
     private BlockType   blockType;
 
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.flac");
+//    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.flac");
     /**
      * Create header by reading from file
      *

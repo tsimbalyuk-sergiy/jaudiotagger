@@ -22,6 +22,7 @@ import org.jaudiotagger.audio.exceptions.InvalidBoxHeaderException;
 import org.jaudiotagger.audio.exceptions.NullBoxIdException;
 import org.jaudiotagger.audio.generic.Utils;
 import org.jaudiotagger.logging.ErrorMessage;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,7 +31,6 @@ import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Logger;
 
 /**
  * Everything in MP4s are held in boxes (formally known as atoms), they are held as a hierachial tree within the MP4.
@@ -53,7 +53,7 @@ import java.util.logging.Logger;
 public class Mp4BoxHeader
 {
     // Logger Object
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.mp4.atom");
+////    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.mp4.atom");
 
     public static final int OFFSET_POS = 0;
     public static final int IDENTIFIER_POS = 4;
@@ -148,7 +148,7 @@ public class Mp4BoxHeader
         this.length = dataBuffer.getInt();
         this.id = Utils.readFourBytesAsChars(dataBuffer);
 
-        logger.finest("Mp4BoxHeader id:"+id+":length:"+length);
+        Logger.trace("Mp4BoxHeader id:"+id+":length:"+length);
         if (id.equals("\0\0\0\0"))
         {
             throw new NullBoxIdException(ErrorMessage.MP4_UNABLE_TO_FIND_NEXT_ATOM_BECAUSE_IDENTIFIER_IS_INVALID.getMsg(id));
@@ -268,7 +268,7 @@ public class Mp4BoxHeader
      */
     public static Mp4BoxHeader seekWithinLevel(FileChannel fc, String id) throws IOException
     {
-        logger.finer("Started searching for:" + id + " in file at:" + fc.position());
+        Logger.trace("Started searching for:" + id + " in file at:" + fc.position());
 
         Mp4BoxHeader boxHeader = new Mp4BoxHeader();
         ByteBuffer headerBuffer = ByteBuffer.allocate(HEADER_LENGTH);
@@ -281,7 +281,7 @@ public class Mp4BoxHeader
         boxHeader.update(headerBuffer);
         while (!boxHeader.getId().equals(id))
         {
-            logger.finer("Found:" + boxHeader.getId() + " Still searching for:" + id + " in file at:" + fc.position());
+            Logger.trace("Found:" + boxHeader.getId() + " Still searching for:" + id + " in file at:" + fc.position());
 
             //64bit data length
             if(boxHeader.getLength() == 1)
@@ -300,7 +300,7 @@ public class Mp4BoxHeader
                 }
 
                 fc.position(fc.position() + length - REALDATA_64BITLENGTH);
-                logger.severe("Skipped 64bit data length, now at:" + fc.position());
+                Logger.error("Skipped 64bit data length, now at:" + fc.position());
             }
             //Something gone wrong probably not at the start of an atom so return null;
             else if (boxHeader.getLength() < Mp4BoxHeader.HEADER_LENGTH)
@@ -318,7 +318,7 @@ public class Mp4BoxHeader
             }
             headerBuffer.rewind();
             bytesRead = fc.read(headerBuffer);
-            logger.finer("Header Bytes Read:" + bytesRead);
+            Logger.trace("Header Bytes Read:" + bytesRead);
             headerBuffer.rewind();
             if (bytesRead == Mp4BoxHeader.HEADER_LENGTH)
             {
@@ -348,7 +348,7 @@ public class Mp4BoxHeader
      */
     public static Mp4BoxHeader seekWithinLevel(ByteBuffer data, String id) throws IOException
     {
-        logger.finer("Started searching for:" + id + " in bytebuffer at" + data.position());
+        Logger.trace("Started searching for:" + id + " in bytebuffer at" + data.position());
 
         Mp4BoxHeader boxHeader = new Mp4BoxHeader();
         if (data.remaining() >= Mp4BoxHeader.HEADER_LENGTH)
@@ -361,7 +361,7 @@ public class Mp4BoxHeader
         }
         while (!boxHeader.getId().equals(id))
         {
-            logger.finer("Found:" + boxHeader.getId() + " Still searching for:" + id + " in bytebuffer at" + data.position());
+            Logger.trace("Found:" + boxHeader.getId() + " Still searching for:" + id + " in bytebuffer at" + data.position());
             //Something gone wrong probably not at the start of an atom so return null;
             if (boxHeader.getLength() < Mp4BoxHeader.HEADER_LENGTH)
             {
@@ -382,7 +382,7 @@ public class Mp4BoxHeader
                 return null;
             }
         }
-        logger.finer("Found:" + id + " in bytebuffer at" + data.position());
+        Logger.trace("Found:" + id + " in bytebuffer at" + data.position());
 
         return boxHeader;
     }

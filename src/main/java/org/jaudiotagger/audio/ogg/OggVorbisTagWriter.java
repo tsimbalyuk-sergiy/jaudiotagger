@@ -27,6 +27,7 @@ import org.jaudiotagger.audio.ogg.util.OggPageHeader;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.id3.AbstractID3v1Tag;
 import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag;
+import org.tinylog.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,7 +35,6 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Write Vorbis Tag within an ogg
@@ -44,7 +44,7 @@ import java.util.logging.Logger;
 public class OggVorbisTagWriter
 {
     // Logger Object
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.ogg");
+//    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.ogg");
 
     private OggVorbisCommentTagCreator tc = new OggVorbisCommentTagCreator();
     private OggVorbisTagReader reader = new OggVorbisTagReader();
@@ -70,24 +70,24 @@ public class OggVorbisTagWriter
 
     public void write(Tag tag, RandomAccessFile raf, RandomAccessFile rafTemp) throws CannotReadException, CannotWriteException, IOException
     {
-        logger.config("Starting to write file:");
+        Logger.trace("Starting to write file:");
 
         //1st Page:Identification Header
-        logger.fine("Read 1st Page:identificationHeader:");
+        Logger.trace("{}","Read 1st Page:identificationHeader:");
         OggPageHeader pageHeader = OggPageHeader.read(raf);
         raf.seek(pageHeader.getStartByte());
 
         //Write 1st page (unchanged) and place writer pointer at end of data
         rafTemp.getChannel().transferFrom(raf.getChannel(), 0, pageHeader.getPageLength() + OggPageHeader.OGG_PAGE_HEADER_FIXED_LENGTH + pageHeader.getSegmentTable().length);
         rafTemp.skipBytes(pageHeader.getPageLength() + OggPageHeader.OGG_PAGE_HEADER_FIXED_LENGTH + pageHeader.getSegmentTable().length);
-        logger.fine("Written identificationHeader:");
+        Logger.trace("{}","Written identificationHeader:");
 
         //2nd page:Comment and Setup if there is enough room, may also (although not normally) contain audio frames
         OggPageHeader secondPageHeader = OggPageHeader.read(raf);
 
         //2nd Page:Store the end of Header
         long secondPageHeaderEndPos = raf.getFilePointer();
-        logger.fine("Read 2nd Page:comment and setup and possibly audio:Header finishes at file position:" + secondPageHeaderEndPos);
+        Logger.trace("{}","Read 2nd Page:comment and setup and possibly audio:Header finishes at file position:" + secondPageHeaderEndPos);
 
         //Get header sizes
         raf.seek(0);
@@ -101,15 +101,15 @@ public class OggVorbisTagWriter
 
         //Calculate new size of new 2nd page
         int newSecondPageDataLength = vorbisHeaderSizes.getSetupHeaderSize() + newCommentLength + vorbisHeaderSizes.getExtraPacketDataSize();
-        logger.fine("Old 2nd Page no of packets: " + secondPageHeader.getPacketList().size());
-        logger.fine("Old 2nd Page size: " + secondPageHeader.getPageLength());
-        logger.fine("Old last packet incomplete: " + secondPageHeader.isLastPacketIncomplete());
-        logger.fine("Setup Header Size: " + vorbisHeaderSizes.getSetupHeaderSize());
-        logger.fine("Extra Packets: " + vorbisHeaderSizes.getExtraPacketList().size());
-        logger.fine("Extra Packet Data Size: " + vorbisHeaderSizes.getExtraPacketDataSize());
-        logger.fine("Old comment: " + vorbisHeaderSizes.getCommentHeaderSize());
-        logger.fine("New comment: " + newCommentLength);
-        logger.fine("New Page Data Size: " + newSecondPageDataLength);
+        Logger.trace("{}","Old 2nd Page no of packets: " + secondPageHeader.getPacketList().size());
+        Logger.trace("{}","Old 2nd Page size: " + secondPageHeader.getPageLength());
+        Logger.trace("{}","Old last packet incomplete: " + secondPageHeader.isLastPacketIncomplete());
+        Logger.trace("{}","Setup Header Size: " + vorbisHeaderSizes.getSetupHeaderSize());
+        Logger.trace("{}","Extra Packets: " + vorbisHeaderSizes.getExtraPacketList().size());
+        Logger.trace("{}","Extra Packet Data Size: " + vorbisHeaderSizes.getExtraPacketDataSize());
+        Logger.trace("{}","Old comment: " + vorbisHeaderSizes.getCommentHeaderSize());
+        Logger.trace("{}","New comment: " + newCommentLength);
+        Logger.trace("{}","New Page Data Size: " + newSecondPageDataLength);
         //Second Page containing new vorbis, setup and possibly some extra packets can fit on one page
         if (isCommentAndSetupHeaderFitsOnASinglePage(newCommentLength, vorbisHeaderSizes.getSetupHeaderSize(), vorbisHeaderSizes.getExtraPacketList()))
         {
@@ -124,20 +124,20 @@ public class OggVorbisTagWriter
             //we dont care if the last audio packet is split on next page as long as we preserve it
             if ((secondPageHeader.getPageLength() < OggPageHeader.MAXIMUM_PAGE_DATA_SIZE) && (((secondPageHeader.getPacketList().size() == 2) && (!secondPageHeader.isLastPacketIncomplete())) || (secondPageHeader.getPacketList().size() > 2)))
             {
-                logger.fine("Header and Setup remain on single page:");
+                Logger.trace("{}","Header and Setup remain on single page:");
                 replaceSecondPageOnly(vorbisHeaderSizes, newCommentLength, newSecondPageDataLength, secondPageHeader, newComment, secondPageHeaderEndPos, raf, rafTemp);
             }
             //Original 2nd page spanned multiple pages so more work to do
             else
             {
-                logger.fine("Header and Setup now on single page:");
+                Logger.trace("{}","Header and Setup now on single page:");
                 replaceSecondPageAndRenumberPageSeqs(vorbisHeaderSizes, newCommentLength, newSecondPageDataLength, secondPageHeader, newComment, raf, rafTemp);
             }
         }
         //Bit more complicated, have to create more than one new page and renumber subsequent audio
         else
         {
-            logger.fine("Header and Setup with shift audio:");
+            Logger.trace("{}","Header and Setup with shift audio:");
             replacePagesAndRenumberPageSeqs(vorbisHeaderSizes, newCommentLength, secondPageHeader, newComment, raf, rafTemp);
         }
     }
@@ -181,11 +181,11 @@ public class OggVorbisTagWriter
             OggPageHeader secondPageHeader,
             ByteBuffer newComment) throws IOException
     {
-        logger.fine("WriteOgg Type 1");
+        Logger.trace("{}","WriteOgg Type 1");
         byte[] segmentTable = createSegmentTable(newCommentLength, vorbisHeaderSizes.getSetupHeaderSize(), vorbisHeaderSizes.getExtraPacketList());
         int newSecondPageHeaderLength = OggPageHeader.OGG_PAGE_HEADER_FIXED_LENGTH + segmentTable.length;
-        logger.fine("New second page header length:" + newSecondPageHeaderLength);
-        logger.fine("No of segments:" + segmentTable.length);
+        Logger.trace("{}","New second page header length:" + newSecondPageHeaderLength);
+        Logger.trace("{}","No of segments:" + segmentTable.length);
 
         ByteBuffer secondPageBuffer = ByteBuffer.allocate(newSecondPageLength + newSecondPageHeaderLength);
         secondPageBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -233,7 +233,7 @@ public class OggVorbisTagWriter
             RandomAccessFile raf,
             RandomAccessFile rafTemp) throws IOException
     {
-        logger.fine("WriteOgg Type 1");
+        Logger.trace("{}","WriteOgg Type 1");
         ByteBuffer secondPageBuffer = startCreateBasicSecondPage(vorbisHeaderSizes, newCommentLength, newSecondPageLength, secondPageHeader, newComment);
 
         raf.seek(secondPageHeaderEndPos);
@@ -263,13 +263,13 @@ public class OggVorbisTagWriter
      */
     private void replaceSecondPageAndRenumberPageSeqs(OggVorbisTagReader.OggVorbisHeaderSizes originalHeaderSizes, int newCommentLength, int newSecondPageLength, OggPageHeader secondPageHeader, ByteBuffer newComment, RandomAccessFile raf, RandomAccessFile rafTemp) throws IOException, CannotReadException, CannotWriteException
     {
-        logger.fine("WriteOgg Type 2");
+        Logger.trace("{}","WriteOgg Type 2");
         ByteBuffer secondPageBuffer = startCreateBasicSecondPage(originalHeaderSizes, newCommentLength, newSecondPageLength, secondPageHeader, newComment);
 
         //Add setup header and packets
         int pageSequence = secondPageHeader.getPageSequence();
         byte[] setupHeaderData = reader.convertToVorbisSetupHeaderPacketAndAdditionalPackets(originalHeaderSizes.getSetupHeaderStartPosition(), raf);
-        logger.finest(setupHeaderData.length + ":" + secondPageBuffer.position() + ":" + secondPageBuffer.capacity());
+        Logger.trace(setupHeaderData.length + ":" + secondPageBuffer.position() + ":" + secondPageBuffer.capacity());
         secondPageBuffer.put(setupHeaderData);
 
         calculateChecksumOverPage(secondPageBuffer);
@@ -297,7 +297,7 @@ public class OggVorbisTagWriter
 
         //We need to work out how to split the newcommentlength over the pages
         int noOfCompletePagesNeededForComment = newCommentLength / OggPageHeader.MAXIMUM_PAGE_DATA_SIZE;
-        logger.config("Comment requires:" + noOfCompletePagesNeededForComment + " complete pages");
+        Logger.trace("Comment requires:" + noOfCompletePagesNeededForComment + " complete pages");
 
         //Create the Pages
         int newCommentOffset = 0;
@@ -342,12 +342,12 @@ public class OggVorbisTagWriter
         }
 
         int lastPageCommentPacketSize = newCommentLength % OggPageHeader.MAXIMUM_PAGE_DATA_SIZE;
-        logger.fine("Last comment packet size:" + lastPageCommentPacketSize);
+        Logger.trace("{}","Last comment packet size:" + lastPageCommentPacketSize);
 
         //End of comment and setup header cannot fit on the last page
         if (!isCommentAndSetupHeaderFitsOnASinglePage(lastPageCommentPacketSize, originalHeaderSizes.getSetupHeaderSize(), originalHeaderSizes.getExtraPacketList()))
         {
-            logger.fine("WriteOgg Type 3");
+            Logger.trace("{}","WriteOgg Type 3");
 
             //Write the last part of comment only (its possible it might be the only comment)
             {
@@ -369,7 +369,7 @@ public class OggVorbisTagWriter
                 {
                     pageBuffer.put(OggPageHeader.FIELD_HEADER_TYPE_FLAG_POS, OggPageHeader.HeaderTypeFlag.CONTINUED_PACKET.getFileValue());
                 }
-                logger.fine("Writing Last Comment Page "+pageSequence +" to file");
+                Logger.trace("{}","Writing Last Comment Page "+pageSequence +" to file");
                 pageSequence++;
                 calculateChecksumOverPage(pageBuffer);
                 rafTemp.getChannel().write(pageBuffer);
@@ -391,7 +391,7 @@ public class OggVorbisTagWriter
                 pageBuffer.put(setupHeaderData);
                 pageBuffer.putInt(OggPageHeader.FIELD_PAGE_SEQUENCE_NO_POS, pageSequence);
                 //pageBuffer.put(OggPageHeader.FIELD_HEADER_TYPE_FLAG_POS, OggPageHeader.HeaderTypeFlag.CONTINUED_PACKET.getFileValue());
-                logger.fine("Writing Setup Header and packets Page "+pageSequence +" to file");
+                Logger.trace("{}","Writing Setup Header and packets Page "+pageSequence +" to file");
 
                 calculateChecksumOverPage(pageBuffer);
                 rafTemp.getChannel().write(pageBuffer);
@@ -400,7 +400,7 @@ public class OggVorbisTagWriter
         else
         {
             //End of Comment and SetupHeader and extra packets can fit on one page
-            logger.fine("WriteOgg Type 4");
+            Logger.trace("{}","WriteOgg Type 4");
 
             //Create last header page
             int newSecondPageDataLength = originalHeaderSizes.getSetupHeaderSize() + lastPageCommentPacketSize + originalHeaderSizes.getExtraPacketDataSize();
@@ -518,7 +518,7 @@ public class OggVorbisTagWriter
      */
     private byte[] createSegmentTable(int newCommentLength, int setupHeaderLength, List<OggPageHeader.PacketStartAndLength> extraPackets)
     {
-        logger.finest("Create SegmentTable CommentLength:" + newCommentLength + ":SetupHeaderLength:" + setupHeaderLength);
+        Logger.trace("Create SegmentTable CommentLength:" + newCommentLength + ":SetupHeaderLength:" + setupHeaderLength);
         ByteArrayOutputStream resultBaos = new ByteArrayOutputStream();
 
         byte[] newStart;
@@ -550,8 +550,8 @@ public class OggVorbisTagWriter
             restShouldBe = createSegments(setupHeaderLength, false);
         }
 
-        logger.finest("Created " + newStart.length + " segments for header");
-        logger.finest("Created " + restShouldBe.length + " segments for setup");
+        Logger.trace("Created " + newStart.length + " segments for header");
+        Logger.trace("Created " + restShouldBe.length + " segments for setup");
 
         try
         {
@@ -561,7 +561,7 @@ public class OggVorbisTagWriter
             {
                 //Packets are being copied literally not converted from a length, so always pass
                 //false parameter, TODO is this statement correct
-                logger.finer("Creating segments for " + extraPackets.size() + " packets");
+                Logger.trace("Creating segments for " + extraPackets.size() + " packets");
                 for (OggPageHeader.PacketStartAndLength packet : extraPackets)
                 {
                     nextPacket = createSegments(packet.getLength(), false);
@@ -635,7 +635,7 @@ public class OggVorbisTagWriter
     //this will return 256 segments which is illegal, should be checked somewhere
     private byte[] createSegments(int length, boolean quitStream)
     {
-        logger.finest("Create Segments for length:" + length + ":QuitStream:" + quitStream);
+        Logger.trace("Create Segments for length:" + length + ":QuitStream:" + quitStream);
         //It is valid to have nil length packets
         if (length == 0)
         {
@@ -677,7 +677,7 @@ public class OggVorbisTagWriter
                 totalDataSize++;
             }
         }
-        logger.finest("Require:" + totalDataSize + " segments for comment");
+        Logger.trace("Require:" + totalDataSize + " segments for comment");
 
         if (setupHeaderLength == 0)
         {
@@ -691,7 +691,7 @@ public class OggVorbisTagWriter
                 totalDataSize++;
             }
         }
-        logger.finest("Require:" + totalDataSize + " segments for comment plus setup");
+        Logger.trace("Require:" + totalDataSize + " segments for comment plus setup");
 
         for (OggPageHeader.PacketStartAndLength extraPacket : extraPacketList)
         {
@@ -709,7 +709,7 @@ public class OggVorbisTagWriter
             }
         }
 
-        logger.finest("Total No Of Segment If New Comment And Header Put On One Page:" + totalDataSize);
+        Logger.trace("Total No Of Segment If New Comment And Header Put On One Page:" + totalDataSize);
         return totalDataSize <= OggPageHeader.MAXIMUM_NO_OF_SEGMENT_SIZE;
     }
 

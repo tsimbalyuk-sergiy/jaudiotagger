@@ -5,12 +5,11 @@ import org.jaudiotagger.audio.iff.IffHeaderChunk;
 import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.wav.WavInfoTag;
 import org.jaudiotagger.tag.wav.WavTag;
+import org.tinylog.Logger;
 
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Stores basic only metadata but only exists as part of a LIST chunk, doesn't have its own size field
@@ -18,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class WavInfoChunk
 {
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.wav.WavInfoChunk");
+//    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.wav.WavInfoChunk");
 
     private WavInfoTag wavInfoTag;
     private String    loggingName;
@@ -53,7 +52,7 @@ public class WavInfoChunk
                     (!Character.isAlphabetic(id.charAt(3)))
                )
             {
-                logger.severe(loggingName + "LISTINFO appears corrupt, ignoring:"+id+":"+size);
+                Logger.error(loggingName + "LISTINFO appears corrupt, ignoring:"+id+":"+size);
                 return false;
             }
 
@@ -64,11 +63,11 @@ public class WavInfoChunk
             }
             catch(BufferUnderflowException bue)
             {
-                logger.log(Level.SEVERE, loggingName + "LISTINFO appears corrupt, ignoring:"+bue.getMessage(), bue);
+                Logger.error("{}",loggingName + "LISTINFO appears corrupt, ignoring:"+bue.getMessage(), bue);
                 return false;
             }
 
-            logger.config(loggingName + "Result:" + id + ":" + size + ":" + value + ":");
+            Logger.trace(loggingName + "Result:" + id + ":" + size + ":" + value + ":");
             WavInfoIdentifier wii = WavInfoIdentifier.getByCode(id);
             if(wii!=null && wii.getFieldKey()!=null)
             {
@@ -78,7 +77,7 @@ public class WavInfoChunk
                 }
                 catch(FieldDataInvalidException fdie)
                 {
-                    logger.log(Level.SEVERE, loggingName + fdie.getMessage(), fdie);
+                    Logger.error("{}",loggingName + fdie.getMessage(), fdie);
                 }
             }
             //Add unless just padding

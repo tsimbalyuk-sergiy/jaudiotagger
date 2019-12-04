@@ -4,13 +4,12 @@ import org.jaudiotagger.audio.SupportedFileFormat;
 import org.jaudiotagger.audio.generic.GenericAudioHeader;
 import org.jaudiotagger.audio.generic.Utils;
 import org.jaudiotagger.audio.iff.IffHeaderChunk;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static org.jaudiotagger.audio.dsf.DsdChunk.CHUNKSIZE_LENGTH;
 
@@ -20,7 +19,7 @@ import static org.jaudiotagger.audio.dsf.DsdChunk.CHUNKSIZE_LENGTH;
  */
 public class FmtChunk
 {
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.dsf.FmtChunk");
+////    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.dsf.FmtChunk");
 
     public static final int FMT_CHUNK_MIN_DATA_SIZE_ = 40;
     private long chunkSizeLength;
@@ -59,7 +58,7 @@ public class FmtChunk
         GenericAudioHeader audioHeader = new GenericAudioHeader();
         if (audioInfoChunk.limit() < FMT_CHUNK_MIN_DATA_SIZE_)
         {
-            logger.log(Level.WARNING, "Not enough bytes supplied for Generic audio header. Returning an empty one.");
+            Logger.warn("{}","Not enough bytes supplied for Generic audio header. Returning an empty one.");
             return audioHeader;
         }
 

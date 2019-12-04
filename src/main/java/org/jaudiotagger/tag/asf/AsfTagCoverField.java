@@ -4,10 +4,10 @@ import org.jaudiotagger.audio.asf.data.AsfHeader;
 import org.jaudiotagger.audio.asf.data.MetadataDescriptor;
 import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.id3.valuepair.ImageFormats;
+import org.tinylog.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Logger;
 
 /**
  * Encapsulates the WM/Pictures provides some convenience methods for decoding
@@ -24,8 +24,8 @@ public class AsfTagCoverField extends AbstractAsfTagImageField
     /**
      * Logger Object
      */
-    public final static Logger LOGGER = Logger
-            .getLogger("org.jaudiotagger.audio.asf.tag");
+//    public final static Logger LOGGER = Logger
+//            .getLogger("org.jaudiotagger.audio.asf.tag");
 
     /**
      * Description
@@ -109,7 +109,7 @@ public class AsfTagCoverField extends AbstractAsfTagImageField
             // code because not 100% sure how to identify
             // formats
             if (mimeType == null) {
-                LOGGER.warning(ErrorMessage.GENERAL_UNIDENITIFED_IMAGE_FORMAT
+                Logger.warn(ErrorMessage.GENERAL_UNIDENITIFED_IMAGE_FORMAT
                         .getMsg());
                 mimeType = ImageFormats.MIME_TYPE_PNG;
             }

@@ -1,6 +1,7 @@
 package org.jaudiotagger.audio.mp3;
 
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.tinylog.Logger;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -143,7 +144,7 @@ public class VbriFrame
 
         //We store this so can return here after scanning through buffer
         int startPosition = bb.position();
-        MP3File.logger.finest("Checking VBRI Frame at" + startPosition);
+        Logger.trace("Checking VBRI Frame at" + startPosition);
 
         bb.position(startPosition + VBRI_OFFSET);
 
@@ -160,7 +161,7 @@ public class VbriFrame
         {
             return null;
         }
-        MP3File.logger.finest("Found VBRI Frame");
+        Logger.trace("Found VBRI Frame");
         return header;
     }
 

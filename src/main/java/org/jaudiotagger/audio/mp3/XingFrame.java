@@ -1,6 +1,7 @@
 package org.jaudiotagger.audio.mp3;
 
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.tinylog.Logger;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -121,7 +122,7 @@ public class XingFrame
         header.get(identifier);
         if (Arrays.equals(identifier, XING_VBR_ID))
         {
-            MP3File.logger.finest("Is Vbr");
+            Logger.trace("Is Vbr");
             vbr = true;
         }
     }
@@ -243,7 +244,7 @@ public class XingFrame
         {
             return null;
         }
-        MP3File.logger.finest("Found Xing Frame");
+        Logger.trace("Found Xing Frame");
         return header;
     }
 

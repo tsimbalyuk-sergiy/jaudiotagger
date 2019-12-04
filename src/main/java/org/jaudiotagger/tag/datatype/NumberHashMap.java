@@ -36,6 +36,7 @@ import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 import org.jaudiotagger.tag.reference.GenreTypes;
 import org.jaudiotagger.tag.reference.PictureTypes;
 import org.jaudiotagger.utils.EqualsUtil;
+import org.tinylog.Logger;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -251,7 +252,7 @@ public class NumberHashMap extends NumberFixedLength implements HashMapInterface
             }
             else if (identifier.equals(DataTypes.OBJ_PICTURE_TYPE))
             {
-                logger.warning(ErrorMessage.MP3_PICTURE_TYPE_INVALID.getMsg(value));
+                Logger.warn(ErrorMessage.MP3_PICTURE_TYPE_INVALID.getMsg(value));
             }
         }
     }

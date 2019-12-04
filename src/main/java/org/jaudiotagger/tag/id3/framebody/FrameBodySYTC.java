@@ -23,6 +23,7 @@ import org.jaudiotagger.tag.datatype.SynchronisedTempoCode;
 import org.jaudiotagger.tag.datatype.SynchronisedTempoCodeList;
 import org.jaudiotagger.tag.id3.ID3v24Frames;
 import org.jaudiotagger.tag.id3.valuepair.EventTimingTimestampTypes;
+import org.tinylog.Logger;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -262,7 +263,7 @@ public class FrameBodySYTC extends AbstractID3v2FrameBody implements ID3v24Frame
         {
             if (code.getTimestamp() < lastTimestamp)
             {
-                logger.warning("Synchronised tempo codes are not in chronological order. " + lastTimestamp + " is followed by " + code.getTimestamp() + ".");
+                Logger.warn("Synchronised tempo codes are not in chronological order. " + lastTimestamp + " is followed by " + code.getTimestamp() + ".");
                 // throw exception???
             }
             lastTimestamp = code.getTimestamp();

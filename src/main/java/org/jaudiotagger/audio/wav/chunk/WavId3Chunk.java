@@ -1,6 +1,5 @@
 package org.jaudiotagger.audio.wav.chunk;
 
-import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.iff.Chunk;
 import org.jaudiotagger.audio.iff.ChunkHeader;
 import org.jaudiotagger.tag.TagException;
@@ -9,17 +8,17 @@ import org.jaudiotagger.tag.id3.ID3v22Tag;
 import org.jaudiotagger.tag.id3.ID3v23Tag;
 import org.jaudiotagger.tag.id3.ID3v24Tag;
 import org.jaudiotagger.tag.wav.WavTag;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.logging.Logger;
 
 /**
  * Contains the ID3 tags.
  */
 public class WavId3Chunk extends Chunk
 {
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.wav.chunk");
+////    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.wav.chunk");
     private WavTag wavTag;
     private String loggingName;
     /**
@@ -41,7 +40,7 @@ public class WavId3Chunk extends Chunk
     {
         if (!isId3v2Tag(chunkData))
         {
-            logger.severe("Invalid ID3 header for ID3 chunk");
+            Logger.error("Invalid ID3 header for ID3 chunk");
             return false;
         }
 
@@ -77,7 +76,7 @@ public class WavId3Chunk extends Chunk
         }
         catch (TagException e)
         {
-            AudioFile.logger.info("Exception reading ID3 tag: " + e.getClass().getName() + ": " + e.getMessage());
+            Logger.info("Exception reading ID3 tag: " + e.getClass().getName() + ": " + e.getMessage());
             return false;
         }
         return true;

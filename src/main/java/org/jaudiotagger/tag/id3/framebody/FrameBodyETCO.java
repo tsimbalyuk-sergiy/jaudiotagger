@@ -22,6 +22,7 @@ import org.jaudiotagger.tag.datatype.EventTimingCodeList;
 import org.jaudiotagger.tag.datatype.NumberHashMap;
 import org.jaudiotagger.tag.id3.ID3v24Frames;
 import org.jaudiotagger.tag.id3.valuepair.EventTimingTimestampTypes;
+import org.tinylog.Logger;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -314,7 +315,7 @@ public class FrameBodyETCO extends AbstractID3v2FrameBody implements ID3v24Frame
             final long translatedTimestamp = code.getTimestamp() == 0 ? lastTimestamp : code.getTimestamp();
             if (code.getTimestamp() < lastTimestamp)
             {
-                logger.warning("Event codes are not in chronological order. " + lastTimestamp + " is followed by " + code.getTimestamp() + ".");
+                Logger.warn("Event codes are not in chronological order. " + lastTimestamp + " is followed by " + code.getTimestamp() + ".");
                 // throw exception???
             }
             lastTimestamp = translatedTimestamp;

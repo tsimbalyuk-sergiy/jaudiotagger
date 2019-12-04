@@ -4,6 +4,7 @@ import org.jaudiotagger.audio.generic.Utils;
 import org.jaudiotagger.audio.mp4.atom.Mp4BoxHeader;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.mp4.Mp4TagField;
+import org.tinylog.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -107,7 +108,7 @@ public class Mp4TagRawBinaryField extends Mp4TagField
 
     public byte[] getRawContent() throws UnsupportedEncodingException
     {
-        logger.fine("Getting Raw data for:" + getId());
+        Logger.trace("{}","Getting Raw data for:" + getId());
         try
         {
             ByteArrayOutputStream outerbaos = new ByteArrayOutputStream();

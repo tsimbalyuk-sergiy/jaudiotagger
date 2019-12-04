@@ -18,7 +18,6 @@ package org.jaudiotagger.tag.id3;
 import org.jaudiotagger.tag.TagException;
 
 import java.lang.reflect.Constructor;
-import java.util.logging.Logger;
 
 /**
  * This contains static methods that can be performed on tags
@@ -31,7 +30,7 @@ import java.util.logging.Logger;
 public class ID3Tags
 {
     //Logger
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.tag.id3");
+//    public static Logger logger = Logger.getLogger("org.jaudiotagger.tag.id3");
 
 
     private ID3Tags()

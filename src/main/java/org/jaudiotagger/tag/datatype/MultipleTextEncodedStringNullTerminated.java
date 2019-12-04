@@ -2,13 +2,13 @@ package org.jaudiotagger.tag.datatype;
 
 import org.jaudiotagger.tag.InvalidDataTypeException;
 import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
+import org.tinylog.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.logging.Level;
 
 /**
  * Represents a data type that supports multiple terminated Strings (there may only be one)
@@ -82,7 +82,7 @@ public class MultipleTextEncodedStringNullTerminated extends AbstractDataType
      */
     public void readByteArray(byte[] arr, int offset) throws InvalidDataTypeException
     {
-        logger.finer("Reading MultipleTextEncodedStringNullTerminated from array from offset:" + offset);
+        Logger.trace("Reading MultipleTextEncodedStringNullTerminated from array from offset:" + offset);
         //Continue until unable to read a null terminated String
         while (true)
         {
@@ -115,11 +115,11 @@ public class MultipleTextEncodedStringNullTerminated extends AbstractDataType
 
             if (size == 0)
             {
-                logger.warning("No null terminated Strings found");
+                Logger.warn("No null terminated Strings found");
                 throw new InvalidDataTypeException("No null terminated Strings found");
             }
         }
-        logger.finer("Read  MultipleTextEncodedStringNullTerminated:" + value + " size:" + size);
+        Logger.trace("Read  MultipleTextEncodedStringNullTerminated:" + value + " size:" + size);
     }
 
     /**
@@ -129,7 +129,7 @@ public class MultipleTextEncodedStringNullTerminated extends AbstractDataType
      */
     public byte[] writeByteArray()
     {
-        logger.finer("Writing MultipleTextEncodedStringNullTerminated");
+        Logger.trace("Writing MultipleTextEncodedStringNullTerminated");
 
         int localSize = 0;
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -145,14 +145,14 @@ public class MultipleTextEncodedStringNullTerminated extends AbstractDataType
         catch (IOException ioe)
         {
             //This should never happen because the write is internal with the JVM it is not to a file
-            logger.log(Level.SEVERE, "IOException in MultipleTextEncodedStringNullTerminated when writing byte array", ioe);
+            Logger.error("{}","IOException in MultipleTextEncodedStringNullTerminated when writing byte array", ioe);
             throw new RuntimeException(ioe);
         }
 
         //Update size member variable
         size = localSize;
 
-        logger.finer("Written MultipleTextEncodedStringNullTerminated");
+        Logger.trace("Written MultipleTextEncodedStringNullTerminated");
         return buffer.toByteArray();
     }
 

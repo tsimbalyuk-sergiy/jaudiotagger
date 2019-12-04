@@ -1,18 +1,18 @@
 package org.jaudiotagger.audio.iff;
 
 import org.jaudiotagger.audio.generic.Utils;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
-import java.util.logging.Logger;
 
 /**
  * Common to all IFF formats such as Wav and Aiff, is the the top level chunk, 8 byte header plus 4 byte type field
  */
 public class IffHeaderChunk
 {
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.iff");
+//    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.iff");
 
     public static int SIGNATURE_LENGTH = 4;
     public static int SIZE_LENGTH = 4;
@@ -33,7 +33,7 @@ public class IffHeaderChunk
             // Must come out to an even byte boundary unless at end of file
             if(raf.getFilePointer()<raf.length())
             {
-                logger.config("Skipping Byte because on odd boundary");
+                Logger.trace("Skipping Byte because on odd boundary");
                 raf.skipBytes(1);
             }
         }
@@ -46,7 +46,7 @@ public class IffHeaderChunk
             // Must come out to an even byte boundary unless at end of file
             if(fc.position()<fc.size())
             {
-                logger.config("Skipping Byte because on odd boundary");
+                Logger.trace("Skipping Byte because on odd boundary");
                 fc.position(fc.position() + 1);
             }
         }

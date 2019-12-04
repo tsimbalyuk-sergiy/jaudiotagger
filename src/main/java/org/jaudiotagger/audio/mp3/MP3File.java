@@ -48,6 +48,7 @@ import org.jaudiotagger.tag.id3.ID3v23Tag;
 import org.jaudiotagger.tag.id3.ID3v24Tag;
 import org.jaudiotagger.tag.lyrics3.AbstractLyrics3;
 import org.jaudiotagger.tag.reference.ID3V2Version;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,7 +64,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
 
 /**
  * This class represents a physical MP3 File
@@ -159,14 +159,14 @@ public class MP3File extends AudioFile
     {
         if ((loadOptions & LOAD_IDV1TAG) != 0)
         {
-            logger.finer("Attempting to read id3v1tags");
+            Logger.trace("Attempting to read id3v1tags");
             try
             {
                 id3v1tag = new ID3v11Tag(newFile, file.getName());
             }
             catch (TagNotFoundException ex)
             {
-                logger.config("No ids3v11 tag found");
+                Logger.trace("No ids3v11 tag found");
             }
 
             try
@@ -178,7 +178,7 @@ public class MP3File extends AudioFile
             }
             catch (TagNotFoundException ex)
             {
-                logger.config("No id3v1 tag found");
+                Logger.trace("No id3v1 tag found");
             }
         }
     }
@@ -199,7 +199,7 @@ public class MP3File extends AudioFile
         //a buffer then we can read the IDv2 information without needing any more File I/O
         if (startByte >= AbstractID3v2Tag.TAG_HEADER_LENGTH)
         {
-            logger.finer("Attempting to read id3v2tags");
+            Logger.trace("Attempting to read id3v2tags");
             try (final FileInputStream fis = new FileInputStream(file))
             {
                 final ByteBuffer bb = ByteBuffer.allocateDirect(startByte);
@@ -208,14 +208,14 @@ public class MP3File extends AudioFile
 
                 if ((loadOptions & LOAD_IDV2TAG) != 0)
                 {
-                    logger.config("Attempting to read id3v2tags");
+                    Logger.trace("Attempting to read id3v2tags");
                     try
                     {
                         this.setID3v2Tag(new ID3v24Tag(bb, file.getName()));
                     }
                     catch (TagNotFoundException ex)
                     {
-                        logger.config("No id3v24 tag found");
+                        Logger.trace("No id3v24 tag found");
                     }
 
                     try
@@ -227,7 +227,7 @@ public class MP3File extends AudioFile
                     }
                     catch (TagNotFoundException ex)
                     {
-                        logger.config("No id3v23 tag found");
+                        Logger.trace("No id3v23 tag found");
                     }
 
                     try
@@ -239,14 +239,14 @@ public class MP3File extends AudioFile
                     }
                     catch (TagNotFoundException ex)
                     {
-                        logger.config("No id3v22 tag found");
+                        Logger.trace("No id3v22 tag found");
                     }
                 }
             }
         }
         else
         {
-            logger.config("Not enough room for valid id3v2 tag:" + startByte);
+            Logger.trace("Not enough room for valid id3v2 tag:" + startByte);
         }
     }
 
@@ -298,7 +298,7 @@ public class MP3File extends AudioFile
      */
     private boolean isFilePortionNull(int startByte, int endByte) throws IOException
     {
-        logger.config("Checking file portion:" + Hex.asHex(startByte) + ":" + Hex.asHex(endByte));
+        Logger.trace("Checking file portion:" + Hex.asHex(startByte) + ":" + Hex.asHex(endByte));
         FileInputStream fis=null;
         FileChannel     fc=null;
         try
@@ -345,20 +345,20 @@ public class MP3File extends AudioFile
         MP3AudioHeader headerOne;
         MP3AudioHeader headerTwo;
 
-        logger.warning(ErrorMessage.MP3_ID3TAG_LENGTH_INCORRECT.getMsg(file.getPath(), Hex.asHex(startByte), Hex.asHex(firstHeaderAfterTag.getMp3StartByte())));
+        Logger.warn(ErrorMessage.MP3_ID3TAG_LENGTH_INCORRECT.getMsg(file.getPath(), Hex.asHex(startByte), Hex.asHex(firstHeaderAfterTag.getMp3StartByte())));
 
         //because we cant agree on start location we reread the audioheader from the start of the file, at least
         //this way we cant overwrite the audio although we might overwrite part of the tag if we write this file
         //back later
         headerOne = new MP3AudioHeader(file, 0);
-        logger.config("Checking from start:" + headerOne);
+        Logger.trace("Checking from start:" + headerOne);
 
         //Although the id3 tag size appears to be incorrect at least we have found the same location for the start
         //of audio whether we start searching from start of file or at the end of the alleged of file so no real
         //problem
         if (firstHeaderAfterTag.getMp3StartByte() == headerOne.getMp3StartByte())
         {
-            logger.config(ErrorMessage.MP3_START_OF_AUDIO_CONFIRMED.getMsg(file.getPath(),
+            Logger.trace(ErrorMessage.MP3_START_OF_AUDIO_CONFIRMED.getMsg(file.getPath(),
                     Hex.asHex(headerOne.getMp3StartByte())));
             return firstHeaderAfterTag;
         }
@@ -366,13 +366,13 @@ public class MP3File extends AudioFile
         {
 
             //We get a different value if read from start, can't guarantee 100% correct lets do some more checks
-            logger.config((ErrorMessage.MP3_RECALCULATED_POSSIBLE_START_OF_MP3_AUDIO.getMsg(file.getPath(),
+            Logger.trace((ErrorMessage.MP3_RECALCULATED_POSSIBLE_START_OF_MP3_AUDIO.getMsg(file.getPath(),
                             Hex.asHex(headerOne.getMp3StartByte()))));
 
             //Same frame count so probably both audio headers with newAudioHeader being the first one
             if (firstHeaderAfterTag.getNumberOfFrames() == headerOne.getNumberOfFrames())
             {
-                logger.warning((ErrorMessage.MP3_RECALCULATED_START_OF_MP3_AUDIO.getMsg(file.getPath(),
+                Logger.warn((ErrorMessage.MP3_RECALCULATED_START_OF_MP3_AUDIO.getMsg(file.getPath(),
                                 Hex.asHex(headerOne.getMp3StartByte()))));
                 return headerOne;
             }
@@ -393,7 +393,7 @@ public class MP3File extends AudioFile
             //seems that newAudioHeader was a false match and the original header was correct
             if (headerTwo.getMp3StartByte() == firstHeaderAfterTag.getMp3StartByte())
             {
-                logger.warning((ErrorMessage.MP3_START_OF_AUDIO_CONFIRMED.getMsg(file.getPath(),
+                Logger.warn((ErrorMessage.MP3_START_OF_AUDIO_CONFIRMED.getMsg(file.getPath(),
                                 Hex.asHex(firstHeaderAfterTag.getMp3StartByte()))));
                 return firstHeaderAfterTag;
             }
@@ -402,14 +402,14 @@ public class MP3File extends AudioFile
             //however it maybe that neither are really headers and just contain the same data being misrepresented as headers.
             if (headerTwo.getNumberOfFrames() == headerOne.getNumberOfFrames())
             {
-                logger.warning((ErrorMessage.MP3_RECALCULATED_START_OF_MP3_AUDIO.getMsg(file.getPath(),
+                Logger.warn((ErrorMessage.MP3_RECALCULATED_START_OF_MP3_AUDIO.getMsg(file.getPath(),
                                 Hex.asHex(headerOne.getMp3StartByte()))));
                 return headerOne;
             }
             ///Doesnt match the frameCount lets go back to the original header
             else
             {
-                logger.warning((ErrorMessage.MP3_RECALCULATED_START_OF_MP3_AUDIO.getMsg(file.getPath(),
+                Logger.warn((ErrorMessage.MP3_RECALCULATED_START_OF_MP3_AUDIO.getMsg(file.getPath(),
                                 Hex.asHex(firstHeaderAfterTag.getMp3StartByte()))));
                 return firstHeaderAfterTag;
             }
@@ -440,13 +440,13 @@ public class MP3File extends AudioFile
 
             //Read ID3v2 tag size (if tag exists) to allow audioHeader parsing to skip over tag
             long tagSizeReportedByHeader = AbstractID3v2Tag.getV2TagSizeIfExists(file);
-            logger.config("TagHeaderSize:" + Hex.asHex(tagSizeReportedByHeader));
+            Logger.trace("TagHeaderSize:" + Hex.asHex(tagSizeReportedByHeader));
             audioHeader = new MP3AudioHeader(file, tagSizeReportedByHeader);
 
             //If the audio header is not straight after the end of the tag then search from start of file
             if (tagSizeReportedByHeader != ((MP3AudioHeader) audioHeader).getMp3StartByte())
             {
-                logger.config("First header found after tag:" + audioHeader);
+                Logger.trace("First header found after tag:" + audioHeader);
                 audioHeader = checkAudioStart(tagSizeReportedByHeader, (MP3AudioHeader) audioHeader);
             }
 
@@ -496,7 +496,7 @@ public class MP3File extends AudioFile
             MP3AudioHeader audioHeader = new MP3AudioHeader(file, startByte);
             if (startByte != audioHeader.getMp3StartByte())
             {
-                logger.config("First header found after tag:" + audioHeader);
+                Logger.trace("First header found after tag:" + audioHeader);
                 audioHeader = checkAudioStart(startByte, audioHeader);
             }
             return audioHeader.getMp3StartByte();
@@ -609,13 +609,13 @@ public class MP3File extends AudioFile
      */
     public void setID3v1Tag(ID3v1Tag id3v1tag)
     {
-        logger.config("setting tagv1:v1 tag");
+        Logger.trace("setting tagv1:v1 tag");
         this.id3v1tag = id3v1tag;
     }
 
     public void setID3v1Tag(Tag id3v1tag)
     {
-        logger.config("setting tagv1:v1 tag");
+        Logger.trace("setting tagv1:v1 tag");
         this.id3v1tag = (ID3v1Tag) id3v1tag;
     }
 
@@ -629,7 +629,7 @@ public class MP3File extends AudioFile
      */
     public void setID3v1Tag(AbstractTag mp3tag)
     {
-        logger.config("setting tagv1:abstract");
+        Logger.trace("setting tagv1:abstract");
         id3v1tag = new ID3v11Tag(mp3tag);
     }
 
@@ -919,20 +919,20 @@ public class MP3File extends AudioFile
         Path path = file.toPath();
         if (!Files.exists(path))
         {
-            logger.severe(ErrorMessage.GENERAL_WRITE_FAILED_BECAUSE_FILE_NOT_FOUND.getMsg(file.getName()));
+            Logger.error(ErrorMessage.GENERAL_WRITE_FAILED_BECAUSE_FILE_NOT_FOUND.getMsg(file.getName()));
             throw new IOException(ErrorMessage.GENERAL_WRITE_FAILED_BECAUSE_FILE_NOT_FOUND.getMsg(file.getName()));
         }
 
         if (TagOptionSingleton.getInstance().isCheckIsWritable() && !Files.isWritable(path))
         {
-            logger.severe(Permissions.displayPermissions(path));
-            logger.severe(ErrorMessage.GENERAL_WRITE_FAILED.getMsg(file.getName()));
+            Logger.error(Permissions.displayPermissions(path));
+            Logger.error(ErrorMessage.GENERAL_WRITE_FAILED.getMsg(file.getName()));
             throw new IOException(ErrorMessage.GENERAL_WRITE_FAILED.getMsg(file.getName()));
         }
 
         if (file.length() <= MINIMUM_FILESIZE)
         {
-            logger.severe(ErrorMessage.GENERAL_WRITE_FAILED_BECAUSE_FILE_IS_TOO_SMALL.getMsg(file.getName()));
+            Logger.error(ErrorMessage.GENERAL_WRITE_FAILED_BECAUSE_FILE_IS_TOO_SMALL.getMsg(file.getName()));
             throw new IOException(ErrorMessage.GENERAL_WRITE_FAILED_BECAUSE_FILE_IS_TOO_SMALL.getMsg(file.getName()));
         }
     }
@@ -950,7 +950,7 @@ public class MP3File extends AudioFile
         //Ensure we are dealing with absolute filepaths not relative ones
         File file = fileToSave.getAbsoluteFile();
 
-        logger.config("Saving  : " + file.getPath());
+        Logger.trace("Saving  : " + file.getPath());
 
         //Checks before starting write
         precheck(file);
@@ -967,17 +967,17 @@ public class MP3File extends AudioFile
                     (new ID3v24Tag()).delete(rfile);
                     (new ID3v23Tag()).delete(rfile);
                     (new ID3v22Tag()).delete(rfile);
-                    logger.config("Deleting ID3v2 tag:"+file.getName());
+                    Logger.trace("Deleting ID3v2 tag:"+file.getName());
                     rfile.close();
                 }
                 else
                 {
-                    logger.config("Writing ID3v2 tag:"+file.getName());
+                    Logger.trace("Writing ID3v2 tag:"+file.getName());
                     final MP3AudioHeader mp3AudioHeader = (MP3AudioHeader) this.getAudioHeader();
                     final long mp3StartByte = mp3AudioHeader.getMp3StartByte();
                     final long newMp3StartByte = id3v2tag.write(file, mp3StartByte);
                     if (mp3StartByte != newMp3StartByte) {
-                        logger.config("New mp3 start byte: " + newMp3StartByte);
+                        Logger.trace("New mp3 start byte: " + newMp3StartByte);
                         mp3AudioHeader.setMp3StartByte(newMp3StartByte);
                     }
 
@@ -996,32 +996,32 @@ public class MP3File extends AudioFile
             //ID3v1 tag
             if (TagOptionSingleton.getInstance().isId3v1Save())
             {
-                logger.config("Processing ID3v1");
+                Logger.trace("Processing ID3v1");
                 if (id3v1tag == null)
                 {
-                    logger.config("Deleting ID3v1");
+                    Logger.trace("Deleting ID3v1");
                     (new ID3v1Tag()).delete(rfile);
                 }
                 else
                 {
-                    logger.config("Saving ID3v1");
+                    Logger.trace("Saving ID3v1");
                     id3v1tag.write(rfile);
                 }
             }
         }
         catch (FileNotFoundException ex)
         {
-            logger.log(Level.SEVERE, ErrorMessage.GENERAL_WRITE_FAILED_BECAUSE_FILE_NOT_FOUND.getMsg(file.getName()), ex);
+            Logger.error("{}",ErrorMessage.GENERAL_WRITE_FAILED_BECAUSE_FILE_NOT_FOUND.getMsg(file.getName()), ex);
             throw ex;
         }
         catch (IOException iex)
         {
-            logger.log(Level.SEVERE, ErrorMessage.GENERAL_WRITE_FAILED_BECAUSE.getMsg(file.getName(), iex.getMessage()), iex);
+            Logger.error("{}",ErrorMessage.GENERAL_WRITE_FAILED_BECAUSE.getMsg(file.getName(), iex.getMessage()), iex);
             throw iex;
         }
         catch (RuntimeException re)
         {
-            logger.log(Level.SEVERE, ErrorMessage.GENERAL_WRITE_FAILED_BECAUSE.getMsg(file.getName(), re.getMessage()), re);
+            Logger.error("{}",ErrorMessage.GENERAL_WRITE_FAILED_BECAUSE.getMsg(file.getName(), re.getMessage()), re);
             throw re;
         }
         finally

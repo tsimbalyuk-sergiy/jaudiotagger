@@ -25,6 +25,7 @@ package org.jaudiotagger.tag.datatype;
 
 import org.jaudiotagger.tag.InvalidDataTypeException;
 import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
+import org.tinylog.Logger;
 
 /**
  * Represents a stream of bytes, continuing until the end of the buffer. Usually used for binary data or where
@@ -113,7 +114,7 @@ public class ByteArraySizeTerminated extends AbstractDataType
      */
     public byte[] writeByteArray()
     {
-        logger.config("Writing byte array" + this.getIdentifier());
+        Logger.trace("Writing byte array" + this.getIdentifier());
         return (byte[]) value;
     }
 }
