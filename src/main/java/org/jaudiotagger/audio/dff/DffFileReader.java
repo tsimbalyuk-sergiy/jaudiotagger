@@ -14,7 +14,6 @@ import org.jaudiotagger.tag.Tag;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
-import java.util.logging.Level;
 
 public class DffFileReader extends AudioFileReader2
 {
@@ -208,7 +207,7 @@ public class DffFileReader extends AudioFileReader2
         audioHeader.setPreciseLength((float) sampleCount / samplingFreqency);
         audioHeader.setVariableBitRate(isDST);
 
-        logger.log(Level.FINE, "Created audio header: " + audioHeader);
+        logger.trace("Created audio header: " + audioHeader);
         return audioHeader;
     }
 

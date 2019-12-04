@@ -26,14 +26,14 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * This abstract class is the skeleton for tag readers. It handles the creation/closing of
@@ -49,7 +49,7 @@ public abstract class AudioFileReader
 {
 
     // Logger Object
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.generic");
+    public static Logger logger = LoggerFactory.getLogger("org.jaudiotagger.audio.generic");
     protected static final int MINIMUM_SIZE_FOR_VALID_AUDIO_FILE = 100;
 
     /*
@@ -85,10 +85,7 @@ public abstract class AudioFileReader
       */
     public AudioFile read(File f) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException
     {
-        if(logger.isLoggable(Level.CONFIG))
-        {
-            logger.config(ErrorMessage.GENERAL_READ.getMsg(f.getAbsolutePath()));
-        }
+            logger.trace(ErrorMessage.GENERAL_READ.getMsg(f.getAbsolutePath()));
 
         if (!Files.isReadable(f.toPath()))
         {
@@ -98,7 +95,7 @@ public abstract class AudioFileReader
             }
             else
             {
-                logger.warning(Permissions.displayPermissions(f.toPath()));
+                logger.warn(Permissions.displayPermissions(f.toPath()));
                 throw new NoReadPermissionsException(ErrorMessage.GENERAL_READ_FAILED_DO_NOT_HAVE_PERMISSION_TO_READ_FILE.getMsg(f.toPath()));
             }
         }
@@ -126,7 +123,7 @@ public abstract class AudioFileReader
         }
         catch (Exception e)
         {
-            logger.log(Level.SEVERE, ErrorMessage.GENERAL_READ.getMsg(f.getAbsolutePath()),e);
+            logger.error("{}",ErrorMessage.GENERAL_READ.getMsg(f.getAbsolutePath()),e);
             throw new CannotReadException(f.getAbsolutePath()+":" + e.getMessage(), e);
         }
         finally
@@ -140,7 +137,7 @@ public abstract class AudioFileReader
             }
             catch (Exception ex)
             {
-                logger.log(Level.WARNING, ErrorMessage.GENERAL_READ_FAILED_UNABLE_TO_CLOSE_RANDOM_ACCESS_FILE.getMsg(f.getAbsolutePath()));
+                logger.warn(ErrorMessage.GENERAL_READ_FAILED_UNABLE_TO_CLOSE_RANDOM_ACCESS_FILE.getMsg(f.getAbsolutePath()));
             }
         }
     }

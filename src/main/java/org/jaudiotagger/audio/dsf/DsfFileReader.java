@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
-import java.util.logging.Level;
 
 import static org.jaudiotagger.audio.dsf.DsdChunk.CHUNKSIZE_LENGTH;
 
@@ -67,7 +66,7 @@ public class DsfFileReader extends AudioFileReader2
             DsdChunk dsd = DsdChunk.readChunk(Utils.readFileDataIntoBufferLE(fc, DsdChunk.DSD_HEADER_LENGTH));
             if (dsd != null)
             {
-                logger.config( file +":actualFileSize:" + fc.size()+":"+dsd.toString());
+                logger.trace( file +":actualFileSize:" + fc.size()+":"+dsd.toString());
 
                 return readTag(fc, dsd, file.toString());
             }
@@ -111,7 +110,7 @@ public class DsfFileReader extends AudioFileReader2
                             case ID3v24Tag.MAJOR_VERSION:
                                 return new ID3v24Tag(id3Chunk.getDataBuffer(), fileName);
                             default:
-                                logger.log(Level.WARNING, fileName + " Unknown ID3v2 version " + version + ". Returning an empty ID3v2 Tag.");
+                                logger.warn(fileName + " Unknown ID3v2 version " + version + ". Returning an empty ID3v2 Tag.");
                                 return null;
                         }
                     }
@@ -122,19 +121,19 @@ public class DsfFileReader extends AudioFileReader2
                 }
                 else
                 {
-                    logger.log(Level.WARNING, fileName + " No existing ID3 tag(1)");
+                    logger.warn(fileName + " No existing ID3 tag(1)");
                     return null;
                 }
             }
             else
             {
-                logger.log(Level.WARNING, fileName + " No existing ID3 tag(2)");
+                logger.warn(fileName + " No existing ID3 tag(2)");
                 return null;
             }
         }
         else
         {
-            logger.log(Level.WARNING, fileName + " No existing ID3 tag(3)");
+            logger.warn(fileName + " No existing ID3 tag(3)");
             return   null;
         }
     }

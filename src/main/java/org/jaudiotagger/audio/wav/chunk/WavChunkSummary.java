@@ -3,8 +3,8 @@ package org.jaudiotagger.audio.wav.chunk;
 import org.jaudiotagger.audio.iff.ChunkSummary;
 import org.jaudiotagger.audio.wav.WavChunkType;
 import org.jaudiotagger.tag.wav.WavTag;
-
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * AIFF Specific methods for ChunkSummarys
@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class WavChunkSummary
 {
     // Logger Object
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.wav.chunk");
+    public static Logger logger = LoggerFactory.getLogger("org.jaudiotagger.audio.wav.chunk");
 
     /**
      * Get start location in file of first metadata chunk (could be LIST or ID3)
@@ -42,7 +42,7 @@ public class WavChunkSummary
         long startLocationOfMetadatTag = getStartLocationOfFirstMetadataChunk(tag);
         if(startLocationOfMetadatTag==-1)
         {
-            logger.severe("Unable to find any metadata tags !");
+            logger.error("Unable to find any metadata tags !");
             return false;
         }
 

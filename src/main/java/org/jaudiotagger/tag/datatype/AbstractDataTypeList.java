@@ -124,7 +124,7 @@ public abstract class AbstractDataTypeList<T extends AbstractDataType> extends A
      */
     public byte[] writeByteArray()
     {
-        logger.config("Writing DataTypeList " + this.getIdentifier());
+        logger.trace("Writing DataTypeList " + this.getIdentifier());
         final byte[] buffer = new byte[getSize()];
         int offset = 0;
         for (final AbstractDataType data : getValue()) {

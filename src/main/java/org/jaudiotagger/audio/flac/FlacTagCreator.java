@@ -25,11 +25,12 @@ import org.jaudiotagger.audio.generic.AbstractTagCreator;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.flac.FlacTag;
 import org.jaudiotagger.tag.vorbiscomment.VorbisCommentCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.ListIterator;
-import java.util.logging.Logger;
 
 /**
  * Create the tag data ready for writing to flac file
@@ -37,7 +38,7 @@ import java.util.logging.Logger;
 public class FlacTagCreator extends AbstractTagCreator
 {
     // Logger Object
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.flac");
+    public static Logger logger = LoggerFactory.getLogger("org.jaudiotagger.audio.flac");
 
     //TODO make an option
     public static final int DEFAULT_PADDING = 4000;
@@ -69,7 +70,7 @@ public class FlacTagCreator extends AbstractTagCreator
         {
             tagLength += image.getBytes().limit() + MetadataBlockHeader.HEADER_LENGTH;
         }
-        logger.config("Convert flac tag:taglength:" + tagLength);
+        logger.trace("Convert flac tag:taglength:" + tagLength);
 
         ByteBuffer buf = ByteBuffer.allocate(tagLength);
 

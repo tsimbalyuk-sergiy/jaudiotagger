@@ -262,7 +262,7 @@ public class FrameBodySYTC extends AbstractID3v2FrameBody implements ID3v24Frame
         {
             if (code.getTimestamp() < lastTimestamp)
             {
-                logger.warning("Synchronised tempo codes are not in chronological order. " + lastTimestamp + " is followed by " + code.getTimestamp() + ".");
+                logger.warn("Synchronised tempo codes are not in chronological order. " + lastTimestamp + " is followed by " + code.getTimestamp() + ".");
                 // throw exception???
             }
             lastTimestamp = code.getTimestamp();

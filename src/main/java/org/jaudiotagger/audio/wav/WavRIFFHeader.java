@@ -47,7 +47,7 @@ public class WavRIFFHeader
         ByteBuffer headerBuffer = Utils.readFileDataIntoBufferLE(fc, FORM_HEADER_LENGTH);
         if(Utils.readFourBytesAsChars(headerBuffer).equals(RIFF_SIGNATURE))
         {
-            logger.finer(loggingName+":Header:File:Size:"+headerBuffer.getInt()); //Size
+            logger.trace(loggingName+":Header:File:Size:"+headerBuffer.getInt()); //Size
             if(Utils.readFourBytesAsChars(headerBuffer).equals(WAVE_SIGNATURE))
             {
                 return true;

@@ -440,9 +440,9 @@ public class Lyrics3v2 extends AbstractLyrics3
 
         if (this.getSize() != size)
         {
-            //logger.config("Lyrics3v2 size didn't match up while writing.");
-            //logger.config("this.getsize()     = " + this.getSize());
-            //logger.config("size (filePointer) = " + size);
+            //logger.trace("Lyrics3v2 size didn't match up while writing.");
+            //logger.trace("this.getsize()     = " + this.getSize());
+            //logger.trace("size (filePointer) = " + size);
         }
 
         str = Long.toString(size);

@@ -314,7 +314,7 @@ public class FrameBodyETCO extends AbstractID3v2FrameBody implements ID3v24Frame
             final long translatedTimestamp = code.getTimestamp() == 0 ? lastTimestamp : code.getTimestamp();
             if (code.getTimestamp() < lastTimestamp)
             {
-                logger.warning("Event codes are not in chronological order. " + lastTimestamp + " is followed by " + code.getTimestamp() + ".");
+                logger.warn("Event codes are not in chronological order. " + lastTimestamp + " is followed by " + code.getTimestamp() + ".");
                 // throw exception???
             }
             lastTimestamp = translatedTimestamp;

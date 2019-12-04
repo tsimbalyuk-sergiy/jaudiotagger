@@ -19,9 +19,10 @@
 package org.jaudiotagger.audio.ogg.util;
 
 import org.jaudiotagger.audio.ogg.VorbisVersion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Logger;
 
 
 /**
@@ -51,7 +52,7 @@ import java.util.logging.Logger;
 public class VorbisIdentificationHeader implements VorbisHeader
 {
     // Logger Object
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.ogg.atom");
+    public static Logger logger = LoggerFactory.getLogger("org.jaudiotagger.audio.ogg.atom");
 
     private int audioChannels;
     private boolean isValid = false;
@@ -125,18 +126,18 @@ public class VorbisIdentificationHeader implements VorbisHeader
     public void decodeHeader(byte[] b)
     {
         int packetType = b[FIELD_PACKET_TYPE_POS];
-        logger.fine("packetType" + packetType);
+        logger.trace("packetType" + packetType);
         String vorbis = new String(b, VorbisHeader.FIELD_CAPTURE_PATTERN_POS, VorbisHeader.FIELD_CAPTURE_PATTERN_LENGTH, StandardCharsets.ISO_8859_1);
 
         if (packetType == VorbisPacketType.IDENTIFICATION_HEADER.getType() && vorbis.equals(CAPTURE_PATTERN))
         {
             this.vorbisVersion = b[7] + (b[8] << 8) + (b[9] << 16) + (b[10] << 24);
-            logger.fine("vorbisVersion" + vorbisVersion);
+            logger.trace("vorbisVersion" + vorbisVersion);
             this.audioChannels = u(b[FIELD_AUDIO_CHANNELS_POS]);
-            logger.fine("audioChannels" + audioChannels);
+            logger.trace("audioChannels" + audioChannels);
             this.audioSampleRate = u(b[12]) + (u(b[13]) << 8) + (u(b[14]) << 16) + (u(b[15]) << 24);
-            logger.fine("audioSampleRate" + audioSampleRate);
-            logger.fine("audioSampleRate" + b[12] + " " + b[13] + " " + b[14]);
+            logger.trace("audioSampleRate" + audioSampleRate);
+            logger.trace("audioSampleRate" + b[12] + " " + b[13] + " " + b[14]);
 
             //TODO is this right spec says signed
             this.bitrateMinimal = u(b[16]) + (u(b[17]) << 8) + (u(b[18]) << 16) + (u(b[19]) << 24);
@@ -146,7 +147,7 @@ public class VorbisIdentificationHeader implements VorbisHeader
             //byte blockSize1 = (byte) ( b[28] & 15 );
 
             int framingFlag = b[FIELD_FRAMING_FLAG_POS];
-            logger.fine("framingFlag" + framingFlag);
+            logger.trace("framingFlag" + framingFlag);
             if (framingFlag != 0)
             {
                 isValid = true;

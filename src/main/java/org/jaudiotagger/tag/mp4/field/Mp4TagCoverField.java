@@ -74,7 +74,7 @@ public class Mp4TagCoverField extends Mp4TagBinaryField
         this.imageType=imageType;
         if(!Mp4FieldType.isCoverArtType(imageType))
         {
-            logger.warning(ErrorMessage.MP4_IMAGE_FORMAT_IS_NOT_TO_EXPECTED_TYPE.getMsg(imageType));
+            logger.warn(ErrorMessage.MP4_IMAGE_FORMAT_IS_NOT_TO_EXPECTED_TYPE.getMsg(imageType));
         }
     }
 
@@ -110,7 +110,7 @@ public class Mp4TagCoverField extends Mp4TagBinaryField
         }
         else
         {
-            logger.warning(ErrorMessage.GENERAL_UNIDENITIFED_IMAGE_FORMAT.getMsg());
+            logger.warn(ErrorMessage.GENERAL_UNIDENITIFED_IMAGE_FORMAT.getMsg());
             imageType = Mp4FieldType.COVERART_PNG;
         }
     }

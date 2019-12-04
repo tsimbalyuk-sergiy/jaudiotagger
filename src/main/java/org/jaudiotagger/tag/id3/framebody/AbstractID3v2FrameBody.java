@@ -149,7 +149,7 @@ public abstract class AbstractID3v2FrameBody extends AbstractTagFrameBody
     public void read(ByteBuffer byteBuffer) throws InvalidTagException
     {
         int size = getSize();
-        logger.config("Reading body for" + this.getIdentifier() + ":" + size);
+        logger.trace("Reading body for" + this.getIdentifier() + ":" + size);
 
         //Allocate a buffer to the size of the Frame Body and read from file
         byte[] buffer = new byte[size];
@@ -164,13 +164,13 @@ public abstract class AbstractID3v2FrameBody extends AbstractTagFrameBody
         for (AbstractDataType object : objectList)
         //correct dataType.
         {
-            logger.finest("offset:" + offset);
+            logger.trace("offset:" + offset);
 
             //The read has extended further than the defined frame size (ok to extend upto
             //size because the next datatype may be of length 0.)
             if (offset > (size))
             {
-                logger.warning("Invalid Size for FrameBody");
+                logger.warn("Invalid Size for FrameBody");
                 throw new InvalidFrameException("Invalid size for Frame Body");
             }
 
@@ -182,7 +182,7 @@ public abstract class AbstractID3v2FrameBody extends AbstractTagFrameBody
             }
             catch (InvalidDataTypeException e)
             {
-                logger.warning("Problem reading datatype within Frame Body:" + e.getMessage());
+                logger.warn("Problem reading datatype within Frame Body:" + e.getMessage());
                 throw e;
             }
             //Increment Offset to start of next datatype.
@@ -198,7 +198,7 @@ public abstract class AbstractID3v2FrameBody extends AbstractTagFrameBody
     public void write(ByteArrayOutputStream tagBuffer)
 
     {
-        logger.config("Writing frame body for" + this.getIdentifier() + ":Est Size:" + size);
+        logger.trace("Writing frame body for" + this.getIdentifier() + ":Est Size:" + size);
         //Write the various fields to file in order
         for (AbstractDataType object : objectList)
         {
@@ -217,7 +217,7 @@ public abstract class AbstractID3v2FrameBody extends AbstractTagFrameBody
             }
         }
         setSize();
-        logger.config("Written frame body for" + this.getIdentifier() + ":Real Size:" + size);
+        logger.trace("Written frame body for" + this.getIdentifier() + ":Real Size:" + size);
 
     }
 

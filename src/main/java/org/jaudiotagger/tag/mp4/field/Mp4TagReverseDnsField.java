@@ -117,7 +117,7 @@ public class Mp4TagReverseDnsField extends Mp4TagField implements TagTextField
         {
             id = IDENTIFIER + ":" + issuer + ":" + descriptor;
             setContent("");
-            logger.warning(ErrorMessage.MP4_REVERSE_DNS_FIELD_HAS_NO_DATA.getMsg(id));
+            logger.warn(ErrorMessage.MP4_REVERSE_DNS_FIELD_HAS_NO_DATA.getMsg(id));
         }
         //Usual Case
         else
@@ -212,7 +212,7 @@ public class Mp4TagReverseDnsField extends Mp4TagField implements TagTextField
     @Override
     public byte[] getRawContentDataOnly() throws UnsupportedEncodingException
     {
-        logger.fine("Getting Raw data for:" + getId());
+        logger.trace("Getting Raw data for:" + getId());
         try
         {
             //Create DataBox data

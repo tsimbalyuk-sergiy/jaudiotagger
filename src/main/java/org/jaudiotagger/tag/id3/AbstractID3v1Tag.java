@@ -24,12 +24,14 @@
  */
 package org.jaudiotagger.tag.id3;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -42,7 +44,7 @@ abstract public class AbstractID3v1Tag extends AbstractID3Tag
 {
 
     //Logger
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.tag.id3");
+    public static Logger logger = LoggerFactory.getLogger("org.jaudiotagger.tag.id3");
 
 
     public AbstractID3v1Tag()
@@ -121,7 +123,7 @@ abstract public class AbstractID3v1Tag extends AbstractID3Tag
     public void delete(RandomAccessFile file) throws IOException
     {
         //Read into Byte Buffer
-        logger.config("Deleting ID3v1 from file if exists");
+        logger.trace("Deleting ID3v1 from file if exists");
 
         FileChannel fc;
         ByteBuffer byteBuffer;
@@ -139,17 +141,17 @@ abstract public class AbstractID3v1Tag extends AbstractID3Tag
         {
             try
             {
-                logger.config("Deleted ID3v1 tag");
+                logger.trace("Deleted ID3v1 tag");
                 file.setLength(file.length() - TAG_LENGTH);
             }
             catch(IOException ex)
             {
-                logger.severe("Unable to delete existing ID3v1 Tag:"+ex.getMessage());
+                logger.error("Unable to delete existing ID3v1 Tag:"+ex.getMessage());
             }
         }
         else
         {
-            logger.config("Unable to find ID3v1 tag to deleteField");
+            logger.trace("Unable to find ID3v1 tag to deleteField");
         }
     }
 

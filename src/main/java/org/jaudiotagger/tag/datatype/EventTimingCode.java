@@ -90,13 +90,13 @@ public class EventTimingCode extends AbstractDataType implements Cloneable
         int localOffset = originalOffset;
         int size = getSize();
 
-        logger.finest("offset:" + localOffset);
+        logger.trace("offset:" + localOffset);
 
         //The read has extended further than the defined frame size (ok to extend upto
         //size because the next datatype may be of length 0.)
         if (originalOffset > buffer.length-size)
         {
-            logger.warning("Invalid size for FrameBody");
+            logger.warn("Invalid size for FrameBody");
             throw new InvalidDataTypeException("Invalid size for FrameBody");
         }
 

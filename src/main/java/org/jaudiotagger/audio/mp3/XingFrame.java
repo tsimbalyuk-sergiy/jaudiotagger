@@ -121,7 +121,7 @@ public class XingFrame
         header.get(identifier);
         if (Arrays.equals(identifier, XING_VBR_ID))
         {
-            MP3File.logger.finest("Is Vbr");
+            MP3File.logger.trace("Is Vbr");
             vbr = true;
         }
     }
@@ -243,7 +243,7 @@ public class XingFrame
         {
             return null;
         }
-        MP3File.logger.finest("Found Xing Frame");
+        MP3File.logger.trace("Found Xing Frame");
         return header;
     }
 

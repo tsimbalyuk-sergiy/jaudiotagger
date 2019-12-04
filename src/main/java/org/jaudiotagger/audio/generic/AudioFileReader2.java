@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.logging.Level;
 
 /**
  * Replacement for AudioFileReader class
@@ -34,10 +33,7 @@ public abstract class AudioFileReader2 extends AudioFileReader
     public AudioFile read(File f) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException
     {
         Path path = f.toPath();
-        if(logger.isLoggable(Level.CONFIG))
-        {
-            logger.config(ErrorMessage.GENERAL_READ.getMsg(path));
-        }
+            logger.trace(ErrorMessage.GENERAL_READ.getMsg(path));
 
         if (!Files.isReadable(path))
         {
@@ -47,7 +43,7 @@ public abstract class AudioFileReader2 extends AudioFileReader
             }
             else
             {
-                logger.warning(Permissions.displayPermissions(path));
+                logger.warn(Permissions.displayPermissions(path));
                 throw new NoReadPermissionsException(ErrorMessage.GENERAL_READ_FAILED_DO_NOT_HAVE_PERMISSION_TO_READ_FILE.getMsg(path));
             }
         }

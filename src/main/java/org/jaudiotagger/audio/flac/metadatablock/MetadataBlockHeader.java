@@ -20,11 +20,12 @@ package org.jaudiotagger.audio.flac.metadatablock;
 
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.logging.ErrorMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.logging.Logger;
 
 /**
  * Metadata Block Header
@@ -41,7 +42,7 @@ public class MetadataBlockHeader
     private byte[]      bytes;
     private BlockType   blockType;
 
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.flac");
+    public static Logger logger = LoggerFactory.getLogger("org.jaudiotagger.audio.flac");
     /**
      * Create header by reading from file
      *

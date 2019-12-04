@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 
 /**
@@ -218,7 +217,7 @@ public class ID3v11Tag extends ID3v1Tag
                     	if(null!= genreId) this.genre = genreId.byteValue();
                     	else
                     	{
-                    		logger.log(Level.WARNING, getLoggingFilename() + ":" + "Unable to convert TCON frame to format suitable for v11 tag", ex);
+                    		logger.warn(getLoggingFilename() + ":" + "Unable to convert TCON frame to format suitable for v11 tag", ex);
                     		this.genre = (byte) ID3v1Tag.GENRE_UNDEFINED;
                     	}
                     }
@@ -513,7 +512,7 @@ public class ID3v11Tag extends ID3v1Tag
         {
             throw new TagNotFoundException("ID3v1 tag not found");
         }
-        logger.finer("Reading v1.1 tag");
+        logger.trace("Reading v1.1 tag");
 
         //Do single file read of data to cut down on file reads
         byte[] dataBuffer = new byte[TAG_LENGTH];
@@ -562,7 +561,7 @@ public class ID3v11Tag extends ID3v1Tag
      */
     public void write(RandomAccessFile file) throws IOException
     {
-        logger.config("Saving ID3v11 tag to file");
+        logger.trace("Saving ID3v11 tag to file");
         byte[] buffer = new byte[TAG_LENGTH];
         int i;
         String str;
@@ -623,7 +622,7 @@ public class ID3v11Tag extends ID3v1Tag
         }
         file.write(buffer);
 
-        logger.config("Saved ID3v11 tag to file");
+        logger.trace("Saved ID3v11 tag to file");
     }
 
 

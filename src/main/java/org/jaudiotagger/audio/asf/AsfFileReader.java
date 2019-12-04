@@ -44,6 +44,8 @@ import org.jaudiotagger.audio.generic.GenericAudioHeader;
 import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.asf.AsfTag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -54,7 +56,6 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * This reader can read ASF files containing any content (stream type). <br>
@@ -67,7 +68,7 @@ public class AsfFileReader extends AudioFileReader
     /**
      * Logger instance
      */
-    private final static Logger LOGGER = Logger.getLogger("org.jaudiotagger.audio.asf");
+    private final static Logger LOGGER = LoggerFactory.getLogger("org.jaudiotagger.audio.asf");
 
     /**
      * This reader will be configured to read tag and audio header information.<br>
@@ -218,7 +219,7 @@ public class AsfFileReader extends AudioFileReader
         }
         catch (final Exception e)
         {
-            logger.severe(e.getMessage());
+            logger.error(e.getMessage());
             if (e instanceof IOException)
             {
                 throw (IOException) e;
@@ -245,7 +246,7 @@ public class AsfFileReader extends AudioFileReader
         {
             if (!f.exists())
             {
-                logger.severe("Unable to find:" + f.getPath());
+                logger.error("Unable to find:" + f.getPath());
                 throw new FileNotFoundException(ErrorMessage.UNABLE_TO_FIND_FILE.getMsg(f.getPath()));
             }
             else
@@ -270,7 +271,7 @@ public class AsfFileReader extends AudioFileReader
             // Just log a warning because file seems to play okay
             if (header.getFileHeader().getFileSize().longValue() != f.length())
             {
-                logger.warning(ErrorMessage.ASF_FILE_HEADER_SIZE_DOES_NOT_MATCH_FILE_SIZE.getMsg(f.getAbsolutePath(), header.getFileHeader().getFileSize().longValue(), f.length()));
+                logger.warn(ErrorMessage.ASF_FILE_HEADER_SIZE_DOES_NOT_MATCH_FILE_SIZE.getMsg(f.getAbsolutePath(), header.getFileHeader().getFileSize().longValue(), f.length()));
             }
 
             return new AudioFile(f, getAudioHeader(header), getTag(header));
@@ -295,7 +296,7 @@ public class AsfFileReader extends AudioFileReader
             }
             catch (final Exception ex)
             {
-                LOGGER.severe("\"" + f + "\" :" + ex);
+                LOGGER.error("\"" + f + "\" :" + ex);
             }
         }
     }

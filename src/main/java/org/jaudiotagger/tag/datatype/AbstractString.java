@@ -121,7 +121,7 @@ public abstract class AbstractString extends AbstractDataType
         }
         else
         {
-            logger.finest("Failed Trying to decode" + value + "with" + encoder.toString());
+            logger.trace("Failed Trying to decode" + value + "with" + encoder.toString());
             return false;
         }
     }
@@ -185,7 +185,7 @@ public abstract class AbstractString extends AbstractDataType
     {
         final byte textEncoding = this.getBody().getTextEncoding();
         final Charset charSetName = TextEncoding.getInstanceOf().getCharsetForId(textEncoding);
-        logger.finest("text encoding:" + textEncoding + " charset:" + charSetName.name());
+        logger.trace("text encoding:" + textEncoding + " charset:" + charSetName.name());
         return charSetName;
     }
 }

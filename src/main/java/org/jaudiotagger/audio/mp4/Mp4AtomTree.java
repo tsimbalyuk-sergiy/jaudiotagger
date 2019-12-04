@@ -9,6 +9,8 @@ import org.jaudiotagger.audio.mp4.atom.NullPadding;
 import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.utils.tree.DefaultMutableTreeNode;
 import org.jaudiotagger.utils.tree.DefaultTreeModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -18,7 +20,6 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Tree representing atoms in the mp4 file
@@ -56,7 +57,7 @@ public class Mp4AtomTree
     private Mp4BoxHeader moovHeader;
 
     //Logger Object
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.mp4");
+    public static Logger logger = LoggerFactory.getLogger("org.jaudiotagger.audio.mp4");
 
     /**
      * Create Atom Tree
@@ -128,7 +129,7 @@ public class Mp4AtomTree
                         NullPadding np = new NullPadding(fc.position() - Mp4BoxHeader.HEADER_LENGTH,fc.size());
                         DefaultMutableTreeNode trailingPaddingNode = new DefaultMutableTreeNode(np);
                         rootNode.add(trailingPaddingNode);
-                        logger.warning(ErrorMessage.NULL_PADDING_FOUND_AT_END_OF_MP4.getMsg(np.getFilePos()));
+                        logger.warn(ErrorMessage.NULL_PADDING_FOUND_AT_END_OF_MP4.getMsg(np.getFilePos()));
                         break;
                     }
                     else
@@ -148,7 +149,7 @@ public class Mp4AtomTree
                     //and finish
                     if(moovNode!=null&mdatNode!=null)
                     {
-                        logger.warning(ErrorMessage.ADDITIONAL_MOOV_ATOM_AT_END_OF_MP4.getMsg(fc.position() - Mp4BoxHeader.HEADER_LENGTH));
+                        logger.warn(ErrorMessage.ADDITIONAL_MOOV_ATOM_AT_END_OF_MP4.getMsg(fc.position() - Mp4BoxHeader.HEADER_LENGTH));
                         break;
                     }
                     moovNode    = newAtom;
@@ -322,7 +323,7 @@ public class Mp4AtomTree
             if (boxHeader != null)
             {
                 boxHeader.setFilePos(moovHeader.getFilePos() + moovBuffer.position());
-                logger.finest("Atom " + boxHeader.getId() + " @ " + boxHeader.getFilePos() + " of size:" + boxHeader.getLength() + " ,ends @ " + (boxHeader.getFilePos() + boxHeader.getLength()));
+                logger.trace("Atom " + boxHeader.getId() + " @ " + boxHeader.getFilePos() + " of size:" + boxHeader.getLength() + " ,ends @ " + (boxHeader.getFilePos() + boxHeader.getLength()));
 
                 DefaultMutableTreeNode newAtom = new DefaultMutableTreeNode(boxHeader);
                 parentNode.add(newAtom);

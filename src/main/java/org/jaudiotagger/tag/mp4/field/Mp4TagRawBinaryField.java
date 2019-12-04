@@ -107,7 +107,7 @@ public class Mp4TagRawBinaryField extends Mp4TagField
 
     public byte[] getRawContent() throws UnsupportedEncodingException
     {
-        logger.fine("Getting Raw data for:" + getId());
+        logger.trace("Getting Raw data for:" + getId());
         try
         {
             ByteArrayOutputStream outerbaos = new ByteArrayOutputStream();

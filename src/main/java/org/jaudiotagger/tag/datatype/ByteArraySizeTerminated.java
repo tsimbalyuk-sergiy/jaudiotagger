@@ -113,7 +113,7 @@ public class ByteArraySizeTerminated extends AbstractDataType
      */
     public byte[] writeByteArray()
     {
-        logger.config("Writing byte array" + this.getIdentifier());
+        logger.trace("Writing byte array" + this.getIdentifier());
         return (byte[]) value;
     }
 }

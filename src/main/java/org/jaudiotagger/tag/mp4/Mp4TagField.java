@@ -23,13 +23,14 @@ import org.jaudiotagger.audio.mp4.atom.Mp4BoxHeader;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.mp4.atom.Mp4DataBox;
 import org.jaudiotagger.tag.mp4.field.Mp4FieldType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Logger;
 
 /**
  * This abstract class represents a link between piece of data, and how it is stored as an mp4 atom
@@ -44,7 +45,7 @@ import java.util.logging.Logger;
 public abstract class Mp4TagField implements TagField
 {
     // Logger Object
-    public static Logger logger = Logger.getLogger("org.jaudiotagger.tag.mp4");
+    public static Logger logger = LoggerFactory.getLogger("org.jaudiotagger.tag.mp4");
 
 
     protected String id;
@@ -142,7 +143,7 @@ public abstract class Mp4TagField implements TagField
      */
     public byte[] getRawContent() throws UnsupportedEncodingException
     {
-        logger.fine("Getting Raw data for:" + getId());
+        logger.trace("Getting Raw data for:" + getId());
         try
         {
             //Create Data Box
@@ -170,7 +171,7 @@ public abstract class Mp4TagField implements TagField
      */
     public byte[] getRawContentDataOnly() throws UnsupportedEncodingException
     {
-        logger.fine("Getting Raw data for:" + getId());
+        logger.trace("Getting Raw data for:" + getId());
         try
         {
             //Create Data Box
