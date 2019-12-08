@@ -127,3 +127,4 @@ test602.wav,no,290,wav with INFO chunk as first chunk before data, and ID3 chunk
 test607.wav,no,297,wav with larger than 2gb of data
 test608.m4a,no,, recent mp4 from iTunes that seems to have invalid atom after mdat atom
 test609.wav,no,299, BufferUnderflowException on read
+test610.aid, no, 300: BufferUnderFlow reading odd sized comment chunk but missing extra byte
