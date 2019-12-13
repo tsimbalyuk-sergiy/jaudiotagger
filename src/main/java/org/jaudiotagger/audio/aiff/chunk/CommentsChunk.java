@@ -85,9 +85,15 @@ public class CommentsChunk extends Chunk
             final int count       = Utils.u(chunkData.getShort());
             // Append a timestamp to the comment
             final String text = Utils.getString(chunkData, 0, count, StandardCharsets.ISO_8859_1) + " " + AiffUtil.formatDate(jTimestamp);
-            if (count % 2 != 0) {
-                // if count is odd, text is padded with an extra byte that we need to consume
-                chunkData.get();
+            if (count % 2 != 0)
+            {
+                //#300
+                //if count is odd, text is padded with an extra byte that we need to consume
+                //but possibly the extra byte is missing so allow for that
+                if(chunkData.position()< chunkData.limit())
+                {
+                    chunkData.get();
+                }
             }
             aiffHeader.addComment(text);
         }
