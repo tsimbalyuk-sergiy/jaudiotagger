@@ -9,7 +9,7 @@ import org.jaudiotagger.tag.reference.Tagger;
 public abstract class ID3Rating
 {
 
-  private ID3Rating() {
+  public ID3Rating() {
   }
 
   public static ID3Rating getInstance(Tagger tagger)
