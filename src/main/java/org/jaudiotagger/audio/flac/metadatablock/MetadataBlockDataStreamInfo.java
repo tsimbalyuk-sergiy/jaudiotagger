@@ -225,7 +225,7 @@ public class MetadataBlockDataStreamInfo  implements MetadataBlockData
         nb += Utils.u(rawdata.get(16)) << 8;
         nb += Utils.u(rawdata.get(15)) << 16;
         nb += Utils.u(rawdata.get(14)) << 24;
-        nb += (Utils.u(rawdata.get(13)) & 0x0F) << 32;
+        nb += (Utils.u(rawdata.get(13)) & 0x0F) << 0;
         return nb;
     }
 }

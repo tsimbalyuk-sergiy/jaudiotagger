@@ -11,6 +11,8 @@ import java.util.logging.Logger;
  * @author Christian Laireiter
  */
 public final class MetadataContainerUtils {
+    public MetadataContainerUtils() {
+    }
 
     // Logger Object
     public static final Logger logger = Logger

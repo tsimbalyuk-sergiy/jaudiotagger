@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -217,17 +218,13 @@ abstract class ChunkContainerReader<ChunkType extends ChunkContainer> implements
     {
         try
         {
-            final T reader = toRegister.newInstance();
+            final T reader = toRegister.getDeclaredConstructor().newInstance();
             for (final GUID curr : reader.getApplyingIds())
             {
                 this.readerMap.put(curr, reader);
             }
         }
-        catch (InstantiationException e)
-        {
-            LOGGER.error(e.getMessage());
-        }
-        catch (IllegalAccessException e)
+        catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e)
         {
             LOGGER.error(e.getMessage());
         }

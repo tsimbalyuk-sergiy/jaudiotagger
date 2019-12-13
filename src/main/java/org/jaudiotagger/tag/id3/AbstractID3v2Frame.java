@@ -129,7 +129,7 @@ public abstract class AbstractID3v2Frame extends AbstractTagFrame implements Tag
         try
         {
             Class<AbstractID3v2FrameBody> c = (Class<AbstractID3v2FrameBody>) Class.forName("org.jaudiotagger.tag.id3.framebody.FrameBody" + identifier);
-            frameBody = c.newInstance();
+            frameBody = c.getDeclaredConstructor().newInstance();
         }
         catch (ClassNotFoundException cnfe)
         {
@@ -147,6 +147,8 @@ public abstract class AbstractID3v2Frame extends AbstractTagFrame implements Tag
         {
             logger.error("{}","IllegalAccessException:" + identifier, iae);
             throw new RuntimeException(iae);
+        } catch (NoSuchMethodException | InvocationTargetException e) {
+            e.printStackTrace();
         }
         frameBody.setHeader(this);
         if (this instanceof ID3v24Frame)
